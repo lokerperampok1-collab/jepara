@@ -1,0 +1,161 @@
+Build a production-ready Indonesian product catalog website for selling furniture and woodcraft items using the attached `products.json` as the single source of truth.
+
+Important context from the dataset:
+- Each product object includes fields like `id`, `slug`, `title`, `sourceLink`, `date`, `modified`, `categories`, `excerpt`, `description`, `images`, `featuredImage`, `waPhone`, `priceRaw`, `priceValue`, `priceFormatted`, `regularPriceValue`, `salePriceValue`, and `categoryLabels`.
+- `categories` are slug-like internal categories.
+- `categoryLabels` are human-readable display categories.
+- `priceValue` is numeric and must be used for sorting/filtering.
+- `priceFormatted` is the formatted display price and should be used in the UI.
+- `waPhone` currently contains `Telegram: @galleryfurnicraftjepara`, so the main CTA should open Telegram, not WhatsApp.
+- `images` contains multiple product image URLs and `featuredImage` is the primary image.
+- `description` often contains product specs, stock info such as Ready / Pre Order, and hashtags.
+
+Your job is to build the website from scratch in this repository and also create the project guidance files that make future Codex sessions reliable.
+
+## Primary goal
+Create a fast, clean, responsive, SEO-friendly catalog website for Gallery Furnicraft Jepara that works well on mobile and desktop. This is not a checkout store. It is a high-converting product catalog with inquiry flow via Telegram.
+
+## Required stack
+Use Astro + TypeScript + Tailwind CSS.
+Reasoning:
+- static generation is ideal for a large JSON product catalog
+- SEO is better than a plain SPA
+- deployment is simple on VPS or static hosting
+- product pages and category pages can be prebuilt from the JSON file
+
+Do not switch to another stack unless there is a serious blocker.
+Do not add a database.
+Do not add authentication.
+Do not add a payment gateway.
+Do not invent a CMS.
+Keep the system simple.
+
+## Required files and project setup
+Create and use these files:
+- `AGENTS.md`
+- `.agents/skills/furniture-catalog-builder/SKILL.md`
+- `.codex/config.toml`
+- a normal Astro project structure
+- a typed data layer that reads and normalizes `products.json`
+
+If these files already exist, improve them instead of replacing them blindly.
+
+## Required website features
+1. Home page
+- hero section with strong furniture / custom woodcraft branding
+- featured categories
+- newest or highlighted products
+- trust / selling points section
+- CTA to contact via Telegram
+
+2. Shop page
+- product grid
+- category filter
+- search by title / keyword
+- sorting by newest, oldest, price low-high, price high-low
+- pagination
+- never render all products on first load if the dataset is large
+
+3. Product detail page
+- image gallery from `images`
+- use `featuredImage` as default hero image
+- show title, price, category labels, excerpt, cleaned description, product specs if parsable
+- show status badge such as Ready / Pre Order when it can be inferred from `description` or `excerpt`
+- Telegram CTA button with prefilled message containing product title and URL slug
+- related products based on overlapping categories
+- optional source link button to the original `sourceLink`
+
+4. Category pages
+- static category landing pages generated from product categories
+- use human-readable category labels when available
+
+5. SEO
+- proper title and meta description per page
+- Open Graph tags
+- sitemap
+- robots.txt
+- canonical URLs where appropriate
+- structured data for product pages if practical
+
+6. Performance
+- lazy-load non-critical images
+- do not download or mirror remote images locally unless absolutely necessary
+- listing cards should use only the needed image
+- avoid heavy client-side hydration
+- keep JS lean
+
+7. Content / UX behavior
+- UI language should be Indonesian
+- keep copy persuasive but clean, not spammy
+- preserve original product data meaning
+- do not hallucinate missing dimensions or materials
+- if data is missing, hide the field instead of fabricating it
+
+## Data handling rules
+- Treat `products.json` as authoritative input.
+- Create TypeScript types for the product schema.
+- Build utilities to:
+  - normalize categories
+  - derive category slugs and labels
+  - parse Telegram username from `waPhone`
+  - compute related products
+  - derive product status from text
+  - strip hashtags from the display description when appropriate
+- Do not mutate the source JSON manually unless there is a verified formatting issue.
+
+## Design direction
+Build a premium handcrafted furniture look:
+- elegant and earthy
+- warm wood tones with modern layout discipline
+- roomy spacing
+- clean cards
+- premium but not flashy
+- mobile-first
+
+Use a design that feels expensive and trustworthy, not like a generic marketplace clone.
+
+## Implementation expectations
+- Create reusable components.
+- Use strong TypeScript types.
+- Keep logic separated from presentation.
+- Add helper utilities for formatting dates, prices, category display, and Telegram links.
+- Add clear comments only where they actually help.
+- Add a small sample of tests if the setup remains lightweight, otherwise prefer build-time validation utilities.
+
+## Build and validation requirements
+Before finishing:
+- install dependencies
+- run the build
+- fix TypeScript and build errors
+- verify routes are generated correctly
+- verify product pages render correctly with real data from `products.json`
+- verify category filters and pagination work
+
+## Required developer experience files
+### `AGENTS.md`
+Keep it concise and practical. It should tell future Codex sessions:
+- what stack this repo uses
+- where product data comes from
+- what commands to run
+- what not to change casually
+- performance rules
+- how inquiry flow works
+
+### `.agents/skills/furniture-catalog-builder/SKILL.md`
+Create a reusable skill for tasks like:
+- building or extending the catalog site
+- adding new product-derived UI
+- debugging data mapping / category generation / SEO / pagination
+- improving catalog performance without changing the business model
+
+### `.codex/config.toml`
+Create a modern Codex project config file and include useful defaults for project root markers. If you include MCP server examples, use the current config format and keep them optional and safe.
+
+## Output format
+When done, provide:
+1. a short summary of what was built
+2. exact files created / modified
+3. run commands
+4. any important notes for deployment
+
+Do the work directly. Do not stop at a plan unless you hit a real blocker.

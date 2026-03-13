@@ -1,0 +1,211 @@
+---
+import InquiryButton from "@/components/InquiryButton.astro";
+import ProductCard from "@/components/ProductCard.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import {
+  getAllCategories,
+  getAllProducts,
+  getHighlightedProducts,
+  getNewestProducts,
+} from "@/data/catalog";
+import { SITE_DESCRIPTION, SITE_NAME } from "@/config/site";
+import { formatCount } from "@/utils/format";
+
+const categories = getAllCategories().slice(0, 8);
+const highlightedProducts = getHighlightedProducts(6);
+const newestProducts = getNewestProducts(6);
+const allProducts = getAllProducts();
+const heroInquiryUrl = highlightedProducts[0]?.telegramUrl ?? `https://t.me/galleryfurnicraftjepara`;
+
+const sellingPoints = [
+  "Pilihan furniture, woodcraft, patung, dan dekorasi berbasis produk asli dari katalog.",
+  "Inquiry langsung via Telegram untuk custom, stok, finishing, dan ongkir.",
+  "Halaman statis ringan agar cepat diakses dari mobile maupun desktop.",
+  "Data kategori, harga, dan galeri mengikuti schema asli `products.json`.",
+];
+---
+
+<BaseLayout title={SITE_NAME} description={SITE_DESCRIPTION}>
+  <section class="container-shell pb-10 pt-12 sm:pt-16">
+    <div class="surface-card grid overflow-hidden rounded-[2.4rem] lg:grid-cols-[1.1fr_0.9fr]">
+      <div class="p-7 sm:p-10 lg:p-12">
+        <p class="text-[0.72rem] font-semibold uppercase tracking-[0.3em] text-[color:var(--color-wood)]">
+          Furniture & Woodcraft Premium
+        </p>
+        <h1 class="serif-display mt-4 max-w-3xl text-4xl font-semibold leading-tight text-[color:var(--color-ink)] sm:text-5xl lg:text-6xl">
+          Katalog furniture Jepara yang terasa premium, rapi, dan siap di-inquiry.
+        </h1>
+        <p class="mt-6 max-w-2xl text-base leading-8 text-[color:var(--color-muted)] sm:text-lg">
+          Temukan meja, kursi, buffet, patung, dekorasi, hingga custom woodcraft dari Gallery Furnicraft Jepara. Fokus kami bukan checkout, melainkan memudahkan Anda memilih produk lalu lanjut diskusi cepat via Telegram.
+        </p>
+
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <InquiryButton href={heroInquiryUrl} label="Mulai Inquiry via Telegram" />
+          <a
+            href="/shop/"
+            class="inline-flex items-center justify-center rounded-full border border-[color:var(--color-border)] bg-white/80 px-5 py-3 text-sm font-semibold text-[color:var(--color-wood-deep)] transition hover:border-[color:var(--color-wood)]"
+          >
+            Jelajahi Katalog
+          </a>
+        </div>
+
+        <dl class="mt-10 grid gap-4 sm:grid-cols-3">
+          <div class="rounded-[1.5rem] bg-[rgba(127,79,42,0.08)] p-4">
+            <dt class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Total produk</dt>
+            <dd class="serif-display mt-2 text-2xl font-semibold text-[color:var(--color-ink)]">
+              {formatCount(allProducts.length, "item")}
+            </dd>
+          </div>
+          <div class="rounded-[1.5rem] bg-[rgba(93,106,77,0.1)] p-4">
+            <dt class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Kategori aktif</dt>
+            <dd class="serif-display mt-2 text-2xl font-semibold text-[color:var(--color-ink)]">
+              {formatCount(getAllCategories().length, "kategori")}
+            </dd>
+          </div>
+          <div class="rounded-[1.5rem] bg-[rgba(38,26,18,0.06)] p-4">
+            <dt class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Alur inquiry</dt>
+            <dd class="serif-display mt-2 text-2xl font-semibold text-[color:var(--color-ink)]">Telegram</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="relative min-h-[22rem] bg-[linear-gradient(160deg,rgba(127,79,42,0.92),rgba(56,36,21,0.98))] p-6 sm:p-8">
+        <div class="absolute inset-x-8 top-8 h-28 rounded-full bg-[rgba(231,200,155,0.12)] blur-3xl"></div>
+        <div class="relative grid h-full gap-4 sm:grid-cols-2">
+          {highlightedProducts.slice(0, 4).map((product, index) => (
+            <a
+              href={`/produk/${product.slug}/`}
+              class:list={[
+                "overflow-hidden rounded-[1.7rem] border border-white/10 bg-white/8 backdrop-blur-sm",
+                index === 0 ? "sm:col-span-2" : "",
+              ]}
+            >
+              {product.featuredImage ? (
+                <img
+                  src={product.featuredImage}
+                  alt={product.title}
+                  class:list={[
+                    "w-full object-cover",
+                    index === 0 ? "aspect-[2/1.15]" : "aspect-[1/1.05]",
+                  ]}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                />
+              ) : (
+                <div class:list={["flex w-full items-center justify-center px-6 text-center text-sm text-white/75", index === 0 ? "aspect-[2/1.15]" : "aspect-[1/1.05]"]}>
+                  Foto produk belum tersedia
+                </div>
+              )}
+              <div class="space-y-2 p-4 text-white">
+                <p class="text-xs uppercase tracking-[0.18em] text-[#f0d8b5]">
+                  {product.primaryCategoryLabel ?? "Produk Pilihan"}
+                </p>
+                <h2 class="serif-display text-lg font-semibold leading-snug">{product.title}</h2>
+                <p class="text-sm text-white/80">{product.priceFormatted ?? "Hubungi kami"}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container-shell mt-12">
+    <SectionHeading
+      eyebrow="Kategori Unggulan"
+      title="Katalog disusun rapi berdasarkan kategori yang memang ada di dataset."
+      description="Label kategori memakai `categoryLabels` dari data produk. Tidak ada kontrak data baru yang dibuat di luar schema asli."
+    />
+
+    <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {categories.map((category, index) => (
+        <a
+          href={`/kategori/${category.slug}/`}
+          class:list={[
+            "surface-card rounded-[1.8rem] p-5 transition hover:-translate-y-1",
+            index % 3 === 1 ? "bg-[linear-gradient(180deg,rgba(255,250,241,0.98),rgba(245,236,223,0.9))]" : "",
+          ]}
+        >
+          <p class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-wood)]">Kategori</p>
+          <h3 class="serif-display mt-3 text-2xl font-semibold text-[color:var(--color-ink)]">{category.label}</h3>
+          <p class="mt-3 text-sm leading-6 text-[color:var(--color-muted)]">
+            {formatCount(category.count, "produk")} siap dibuka sebagai halaman statis.
+          </p>
+          <span class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--color-wood-deep)]">
+            Lihat kategori
+            <span aria-hidden="true">→</span>
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="container-shell mt-20">
+    <SectionHeading
+      eyebrow="Produk Pilihan"
+      title="Produk dengan tampilan galeri dan data paling siap untuk langsung dipertimbangkan."
+      description="Harga memakai `priceFormatted`, sedangkan logika sorting dan ranking tetap memakai `priceValue` di layer data."
+    />
+    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {highlightedProducts.map((product, index) => (
+        <ProductCard product={product} eager={index < 3} />
+      ))}
+    </div>
+  </section>
+
+  <section class="container-shell mt-20">
+    <div class="surface-card rounded-[2.2rem] p-7 sm:p-10">
+      <SectionHeading
+        eyebrow="Nilai Jual"
+        title="Dibangun untuk konversi inquiry, bukan untuk meniru marketplace generik."
+        description="Arah desain hangat dan premium, tetapi perilaku situs tetap sederhana: browsing cepat, SEO jelas, dan CTA Telegram selalu dekat dengan konteks produk."
+      />
+
+      <div class="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        {sellingPoints.map((item, index) => (
+          <div class="rounded-[1.6rem] border border-[color:var(--color-border)] bg-white/70 p-5">
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--color-wood)]">
+              0{index + 1}
+            </p>
+            <p class="mt-3 text-sm leading-7 text-[color:var(--color-body)]">{item}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="container-shell mt-20">
+    <SectionHeading
+      eyebrow="Terbaru"
+      title="Produk yang baru masuk ke katalog."
+      description="Tanggal mengikuti field `date` dari dataset sehingga halaman produk dan urutan listing tetap sinkron dengan sumber data."
+    />
+    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {newestProducts.map((product) => (
+        <ProductCard product={product} />
+      ))}
+    </div>
+  </section>
+
+  <section class="container-shell mt-20 pb-10">
+    <div class="rounded-[2.4rem] bg-[linear-gradient(135deg,#533119,#7b4c28)] px-7 py-10 text-white shadow-[0_30px_70px_rgba(83,49,25,0.24)] sm:px-10">
+      <p class="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[#efcfab]">Siap Diskusi Produk</p>
+      <h2 class="serif-display mt-4 text-3xl font-semibold sm:text-4xl">
+        Butuh penawaran, custom ukuran, atau cek ketersediaan?
+      </h2>
+      <p class="mt-4 max-w-2xl text-base leading-8 text-white/82">
+        Gunakan halaman produk untuk membuka detail dan kirim pesan dengan konteks produk yang sudah terisi ke Telegram Gallery Furnicraft Jepara.
+      </p>
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+        <InquiryButton href={heroInquiryUrl} label="Buka Telegram Sekarang" />
+        <a
+          href="/shop/"
+          class="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/10 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/15"
+        >
+          Jelajahi Semua Produk
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

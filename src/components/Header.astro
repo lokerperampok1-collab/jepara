@@ -1,0 +1,55 @@
+---
+import { BRAND_TELEGRAM_HANDLE, SITE_NAME } from "@/config/site";
+
+const telegramUrl = `https://t.me/${BRAND_TELEGRAM_HANDLE}`;
+const pathname = Astro.url.pathname;
+const links = [
+  { href: "/", label: "Beranda" },
+  { href: "/shop/", label: "Katalog" },
+  { href: "/kategori/", label: "Kategori" },
+];
+
+function isActive(href: string) {
+  if (href === "/") {
+    return pathname === "/";
+  }
+
+  return pathname === href || pathname.startsWith(href);
+}
+---
+
+<header class="sticky top-0 z-40 border-b border-[color:var(--color-border)] bg-[rgba(255,250,243,0.88)] backdrop-blur-xl">
+  <div class="container-shell flex items-center justify-between gap-4 py-4">
+    <a href="/" class="min-w-0">
+      <span class="block text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-muted)]">
+        Furniture Jepara
+      </span>
+      <span class="serif-display mt-1 block text-lg font-semibold text-[color:var(--color-ink)] sm:text-xl">
+        {SITE_NAME}
+      </span>
+    </a>
+
+    <nav class="hidden items-center gap-6 text-sm text-[color:var(--color-body)] md:flex">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          class:list={[
+            "transition hover:text-[color:var(--color-wood-deep)]",
+            isActive(link.href) ? "font-semibold text-[color:var(--color-wood-deep)]" : "",
+          ]}
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+
+    <a
+      href={telegramUrl}
+      target="_blank"
+      rel="noreferrer"
+      class="inline-flex items-center justify-center rounded-full bg-[color:var(--color-wood-deep)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[color:var(--color-wood)]"
+    >
+      Hubungi via Telegram
+    </a>
+  </div>
+</header>

@@ -1,0 +1,180 @@
+---
+import InquiryButton from "@/components/InquiryButton.astro";
+import ProductCard from "@/components/ProductCard.astro";
+import ProductGallery from "@/components/ProductGallery.astro";
+import ProductStatusBadge from "@/components/ProductStatusBadge.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getAllProducts, getProductBySlug, getRelatedProducts } from "@/data/catalog";
+import { SITE_NAME } from "@/config/site";
+import { formatDateIndo, toCanonicalUrl } from "@/utils/format";
+
+export function getStaticPaths() {
+  return getAllProducts().map((product) => ({
+    params: {
+      slug: product.slug,
+    },
+  }));
+}
+
+const product = getProductBySlug(Astro.params.slug ?? "");
+
+if (!product) {
+  throw new Error("Produk tidak ditemukan.");
+}
+
+const relatedProducts = getRelatedProducts(product, 4);
+const pageDescription =
+  product.excerpt ||
+  product.descriptionParagraphs[0] ||
+  `Lihat detail ${product.title} dari ${SITE_NAME}.`;
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  name: product.title,
+  description: pageDescription,
+  image: product.images,
+  category: product.categoryItems.map((item) => item.label).join(", "),
+  sku: String(product.id),
+  url: toCanonicalUrl(`/produk/${product.slug}/`),
+  brand: {
+    "@type": "Brand",
+    name: SITE_NAME,
+  },
+  offers: product.priceValue
+    ? {
+        "@type": "Offer",
+        priceCurrency: "IDR",
+        price: product.priceValue,
+        url: toCanonicalUrl(`/produk/${product.slug}/`),
+        availability:
+          product.status === "ready"
+            ? "https://schema.org/InStock"
+            : product.status === "pre-order" || product.status === "open-order"
+              ? "https://schema.org/PreOrder"
+              : "https://schema.org/LimitedAvailability",
+      }
+    : undefined,
+};
+---
+
+<BaseLayout
+  title={product.title}
+  description={pageDescription}
+  image={product.featuredImage}
+  canonicalPath={`/produk/${product.slug}/`}
+  type="article"
+  structuredData={structuredData}
+>
+  <section class="container-shell pb-10 pt-12">
+    <nav class="mb-6 flex flex-wrap items-center gap-2 text-sm text-[color:var(--color-muted)]">
+      <a href="/" class="transition hover:text-[color:var(--color-wood)]">Beranda</a>
+      <span>/</span>
+      <a href="/shop/" class="transition hover:text-[color:var(--color-wood)]">Katalog</a>
+      <span>/</span>
+      <span class="text-[color:var(--color-body)]">{product.title}</span>
+    </nav>
+
+    <div class="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+      <ProductGallery images={product.images.length ? product.images : product.featuredImage ? [product.featuredImage] : []} title={product.title} />
+
+      <div class="space-y-6">
+        <div class="surface-card rounded-[2rem] p-7 sm:p-8">
+          <div class="flex flex-wrap items-center gap-3">
+            <ProductStatusBadge label={product.statusLabel} />
+            {product.categoryItems.map((item) => (
+              <a
+                href={`/kategori/${item.slug}/`}
+                class="rounded-full bg-[rgba(38,26,18,0.06)] px-3 py-1 text-xs font-medium text-[color:var(--color-body)]"
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
+
+          <h1 class="serif-display mt-5 text-3xl font-semibold leading-tight text-[color:var(--color-ink)] sm:text-4xl">
+            {product.title}
+          </h1>
+
+          <p class="mt-4 text-2xl font-semibold text-[color:var(--color-wood-deep)]">
+            {product.priceFormatted ?? "Hubungi kami untuk harga"}
+          </p>
+
+          {product.excerpt && <p class="mt-5 text-base leading-8 text-[color:var(--color-muted)]">{product.excerpt}</p>}
+
+          <dl class="mt-8 grid gap-4 sm:grid-cols-2">
+            <div class="rounded-[1.4rem] border border-[color:var(--color-border)] bg-white/70 p-4">
+              <dt class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Tanggal terbit</dt>
+              <dd class="mt-2 text-sm font-medium text-[color:var(--color-body)]">{formatDateIndo(product.date)}</dd>
+            </div>
+            <div class="rounded-[1.4rem] border border-[color:var(--color-border)] bg-white/70 p-4">
+              <dt class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Terakhir diperbarui</dt>
+              <dd class="mt-2 text-sm font-medium text-[color:var(--color-body)]">{formatDateIndo(product.modified)}</dd>
+            </div>
+          </dl>
+
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+            <InquiryButton href={product.telegramUrl} label="Tanya Produk Ini via Telegram" />
+            {product.sourceLink && (
+              <a
+                href={product.sourceLink}
+                target="_blank"
+                rel="noreferrer"
+                class="inline-flex items-center justify-center rounded-full border border-[color:var(--color-border)] bg-white/80 px-5 py-3 text-sm font-semibold text-[color:var(--color-wood-deep)] transition hover:border-[color:var(--color-wood)]"
+              >
+                Lihat Sumber Asli
+              </a>
+            )}
+          </div>
+        </div>
+
+        {product.specItems.length > 0 && (
+          <section class="surface-card rounded-[2rem] p-7">
+            <h2 class="serif-display text-2xl font-semibold text-[color:var(--color-ink)]">Spesifikasi</h2>
+            <dl class="mt-6 grid gap-4 sm:grid-cols-2">
+              {product.specItems.map((spec) => (
+                <div class="rounded-[1.3rem] border border-[color:var(--color-border)] bg-white/70 p-4">
+                  <dt class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">{spec.label}</dt>
+                  <dd class="mt-2 text-sm font-medium leading-7 text-[color:var(--color-body)]">{spec.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        )}
+      </div>
+    </div>
+  </section>
+
+  {product.descriptionParagraphs.length > 0 && (
+    <section class="container-shell">
+      <div class="surface-card rounded-[2rem] p-7 sm:p-8">
+        <SectionHeading
+          eyebrow="Deskripsi Produk"
+          title="Ringkasan detail dari data produk."
+          description="Hashtag promosi dihilangkan pada tampilan agar isi produk lebih mudah dibaca tanpa mengubah makna data."
+        />
+
+        <div class="prose-copy mt-8 max-w-4xl text-base leading-8 text-[color:var(--color-body)]">
+          {product.descriptionParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {relatedProducts.length > 0 && (
+    <section class="container-shell mt-20 pb-8">
+      <SectionHeading
+        eyebrow="Produk Terkait"
+        title="Masih satu alur kategori dengan produk ini."
+        description="Rekomendasi diambil dari irisan `categories`, bukan dari data buatan tambahan."
+      />
+
+      <div class="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+        {relatedProducts.map((item) => (
+          <ProductCard product={item} />
+        ))}
+      </div>
+    </section>
+  )}
+</BaseLayout>

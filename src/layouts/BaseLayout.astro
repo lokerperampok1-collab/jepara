@@ -1,0 +1,61 @@
+---
+import Footer from "@/components/Footer.astro";
+import Header from "@/components/Header.astro";
+import { SITE_DESCRIPTION, SITE_NAME } from "@/config/site";
+import "@/styles/global.css";
+import { toCanonicalUrl } from "@/utils/format";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string | null;
+  canonicalPath?: string;
+  type?: "website" | "article";
+  structuredData?: Record<string, unknown> | null;
+}
+
+const {
+  title = SITE_NAME,
+  description = SITE_DESCRIPTION,
+  image = null,
+  canonicalPath = Astro.url.pathname,
+  type = "website",
+  structuredData = null,
+} = Astro.props;
+
+const pageTitle = title === SITE_NAME ? title : `${title} | ${SITE_NAME}`;
+const canonicalUrl = toCanonicalUrl(canonicalPath);
+const ogImage = image ?? "/favicon.svg";
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage.startsWith("http") ? ogImage : toCanonicalUrl(ogImage)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage.startsWith("http") ? ogImage : toCanonicalUrl(ogImage)} />
+    {structuredData && <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />}
+  </head>
+  <body>
+    <div class="page-shell">
+      <Header />
+      <main>
+        <slot />
+      </main>
+      <Footer />
+    </div>
+  </body>
+</html>

@@ -1,0 +1,47 @@
+---
+import { getAllCategories, getAllProducts, paginateProducts } from "@/data/catalog";
+import { PRODUCTS_PER_PAGE } from "@/config/site";
+import SectionHeading from "@/components/SectionHeading.astro";
+import ShopBrowser from "@/components/ShopBrowser.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+export function getStaticPaths() {
+  const products = getAllProducts();
+  const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
+
+  return Array.from({ length: Math.max(totalPages - 1, 0) }, (_, index) => index + 2).map((page) => {
+    const pagination = paginateProducts(products, page, PRODUCTS_PER_PAGE, (currentPage) =>
+      currentPage <= 1 ? "/shop/" : `/shop/halaman/${currentPage}/`,
+    );
+
+    return {
+      params: { page: String(page) },
+      props: {
+        initialProducts: pagination.items,
+        initialMeta: pagination.meta,
+      },
+    };
+  });
+}
+
+const { initialProducts, initialMeta } = Astro.props;
+const categories = getAllCategories();
+---
+
+<BaseLayout
+  title={`Katalog Produk Halaman ${initialMeta.currentPage}`}
+  description="Halaman lanjutan katalog furniture dan woodcraft Gallery Furnicraft Jepara."
+  canonicalPath={`/shop/halaman/${initialMeta.currentPage}/`}
+>
+  <section class="container-shell pb-6 pt-12">
+    <SectionHeading
+      eyebrow="Katalog Produk"
+      title={`Halaman ${initialMeta.currentPage} dari katalog produk.`}
+      description="Pagination statis menjaga HTML awal tetap ringan meskipun jumlah produk besar."
+    />
+  </section>
+
+  <section class="container-shell pb-8">
+    <ShopBrowser initialProducts={initialProducts} initialMeta={initialMeta} categories={categories} />
+  </section>
+</BaseLayout>

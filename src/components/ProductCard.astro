@@ -1,0 +1,69 @@
+---
+import ProductStatusBadge from "@/components/ProductStatusBadge.astro";
+import type { NormalizedProduct } from "@/types/catalog";
+
+interface Props {
+  product: NormalizedProduct;
+  eager?: boolean;
+}
+
+const { product, eager = false } = Astro.props;
+const imageAlt = product.featuredImage ? product.title : "Produk tanpa gambar";
+---
+
+<article class="surface-card group overflow-hidden rounded-[1.75rem]">
+  <a href={`/produk/${product.slug}/`} class="block">
+    <div class="aspect-[4/4.7] overflow-hidden bg-[rgba(127,79,42,0.08)]">
+      {product.featuredImage ? (
+        <img
+          src={product.featuredImage}
+          alt={imageAlt}
+          class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
+          loading={eager ? "eager" : "lazy"}
+          decoding="async"
+        />
+      ) : (
+        <div class="flex h-full items-center justify-center px-8 text-center text-sm text-[color:var(--color-muted)]">
+          Foto produk belum tersedia
+        </div>
+      )}
+    </div>
+  </a>
+
+  <div class="space-y-4 p-5">
+    <div class="flex flex-wrap items-center gap-2">
+      <ProductStatusBadge label={product.statusLabel} />
+      {product.primaryCategoryLabel && (
+        <span class="rounded-full bg-[rgba(38,26,18,0.06)] px-3 py-1 text-xs font-medium text-[color:var(--color-body)]">
+          {product.primaryCategoryLabel}
+        </span>
+      )}
+    </div>
+
+    <div>
+      <h3 class="serif-display text-xl font-semibold leading-snug text-[color:var(--color-ink)]">
+        <a href={`/produk/${product.slug}/`} class="transition hover:text-[color:var(--color-wood)]">
+          {product.title}
+        </a>
+      </h3>
+      {product.excerpt && <p class="line-clamp-3 mt-3 text-sm leading-6 text-[color:var(--color-muted)]">{product.excerpt}</p>}
+    </div>
+
+    <div class="flex items-end justify-between gap-4">
+      <div>
+        <p class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Harga</p>
+        <p class="mt-1 text-lg font-semibold text-[color:var(--color-wood-deep)]">
+          {product.priceFormatted ?? "Hubungi kami"}
+        </p>
+      </div>
+
+      <a
+        href={`/produk/${product.slug}/`}
+        class="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--color-wood-deep)]"
+      >
+        Lihat Detail
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</article>

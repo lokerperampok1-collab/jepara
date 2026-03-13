@@ -1,0 +1,40 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import { getAllCategories } from "@/data/catalog";
+import { formatCount } from "@/utils/format";
+
+const categories = getAllCategories();
+---
+
+<BaseLayout
+  title="Kategori Produk"
+  description="Daftar kategori statis yang dibentuk langsung dari field categories dan categoryLabels di products.json."
+  canonicalPath="/kategori/"
+>
+  <section class="container-shell pb-8 pt-12">
+    <SectionHeading
+      eyebrow="Kategori"
+      title="Semua kategori katalog."
+      description="Setiap halaman kategori dibuat statis dari data produk asli agar mudah diindeks dan tetap cepat di mobile."
+    />
+
+    <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {categories.map((category, index) => (
+        <a
+          href={`/kategori/${category.slug}/`}
+          class:list={[
+            "surface-card rounded-[1.8rem] p-6 transition hover:-translate-y-1",
+            index % 4 === 0 ? "bg-[linear-gradient(180deg,rgba(255,250,241,0.98),rgba(250,241,227,0.95))]" : "",
+          ]}
+        >
+          <p class="text-xs uppercase tracking-[0.2em] text-[color:var(--color-wood)]">Kategori</p>
+          <h2 class="serif-display mt-3 text-2xl font-semibold text-[color:var(--color-ink)]">{category.label}</h2>
+          <p class="mt-4 text-sm leading-7 text-[color:var(--color-muted)]">
+            {formatCount(category.count, "produk")} tersedia pada kategori ini.
+          </p>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

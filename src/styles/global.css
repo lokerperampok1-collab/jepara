@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+:root {
+  --color-ink: #261a12;
+  --color-body: #43352b;
+  --color-muted: #7d6c5f;
+  --color-border: rgba(73, 52, 36, 0.12);
+  --color-panel: rgba(255, 251, 244, 0.92);
+  --color-panel-strong: #fffaf1;
+  --color-wood: #7f4f2a;
+  --color-wood-deep: #55321b;
+  --color-sand: #f6efe3;
+  --color-moss: #5d6a4d;
+  --color-highlight: #e7c89b;
+  --font-sans: "Trebuchet MS", "Segoe UI", "Helvetica Neue", sans-serif;
+  --font-serif: "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --shadow-soft: 0 24px 60px rgba(68, 43, 21, 0.12);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: var(--color-body);
+  font-family: var(--font-sans);
+  background:
+    radial-gradient(circle at top left, rgba(231, 200, 155, 0.5), transparent 24rem),
+    radial-gradient(circle at top right, rgba(93, 106, 77, 0.12), transparent 22rem),
+    linear-gradient(180deg, #fffaf3 0%, #f8f1e5 48%, #fdf9f4 100%);
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.page-shell {
+  position: relative;
+  overflow: clip;
+}
+
+.page-shell::before,
+.page-shell::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+  inset: auto;
+  border-radius: 999px;
+  filter: blur(20px);
+}
+
+.page-shell::before {
+  width: 18rem;
+  height: 18rem;
+  left: -7rem;
+  top: 10rem;
+  background: rgba(127, 79, 42, 0.12);
+}
+
+.page-shell::after {
+  width: 16rem;
+  height: 16rem;
+  right: -6rem;
+  top: 22rem;
+  background: rgba(93, 106, 77, 0.12);
+}
+
+.container-shell {
+  width: min(1180px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.surface-card {
+  background: linear-gradient(180deg, rgba(255, 250, 241, 0.98), rgba(255, 255, 255, 0.88));
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-soft);
+}
+
+.serif-display {
+  font-family: var(--font-serif);
+}
+
+.prose-copy p {
+  margin: 0;
+}
+
+.prose-copy p + p {
+  margin-top: 0.95rem;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

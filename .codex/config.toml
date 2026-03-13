@@ -1,0 +1,18 @@
+project_root_markers = [".git", "package.json", "astro.config.mjs", "tsconfig.json", "AGENTS.md"]
+
+# Optional: official OpenAI developer docs MCP server
+[mcp_servers.openaiDeveloperDocs]
+url = "https://developers.openai.com/mcp"
+enabled = true
+required = false
+startup_timeout_sec = 20
+tool_timeout_sec = 120
+
+# Optional: Context7 docs MCP server example
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp"]
+enabled = false
+required = false
+startup_timeout_sec = 20
+tool_timeout_sec = 120

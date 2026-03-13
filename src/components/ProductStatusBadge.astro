@@ -1,0 +1,20 @@
+---
+interface Props {
+  label: string | null;
+}
+
+const { label } = Astro.props;
+const colorClass = label
+  ? label === "Ready"
+    ? "bg-[rgba(93,106,77,0.16)] text-[color:var(--color-moss)]"
+    : "bg-[rgba(127,79,42,0.14)] text-[color:var(--color-wood-deep)]"
+  : "";
+---
+
+{
+  label && (
+    <span class:list={["inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]", colorClass]}>
+      {label}
+    </span>
+  )
+}

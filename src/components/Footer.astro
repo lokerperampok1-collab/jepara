@@ -1,0 +1,56 @@
+---
+import { BRAND_TELEGRAM_HANDLE, SITE_NAME, SITE_TAGLINE } from "@/config/site";
+import { getAllCategories } from "@/data/catalog";
+
+const topCategories = getAllCategories().slice(0, 6);
+---
+
+<footer class="mt-20 border-t border-[color:var(--color-border)] bg-[rgba(48,29,16,0.95)] text-[#f4ede1]">
+  <div class="container-shell grid gap-10 py-14 md:grid-cols-[1.3fr_0.8fr_0.9fr]">
+    <div>
+      <p class="text-[0.72rem] font-semibold uppercase tracking-[0.3em] text-[#d3b58f]">Gallery Furnicraft Jepara</p>
+      <h2 class="serif-display mt-3 text-2xl font-semibold">{SITE_TAGLINE}</h2>
+      <p class="mt-4 max-w-xl text-sm leading-7 text-[#ddcfbe]">
+        Katalog ini dirancang untuk memudahkan pencarian furniture, custom woodcraft, dekorasi, dan ukiran Jepara tanpa proses checkout yang rumit.
+      </p>
+    </div>
+
+    <div>
+      <h3 class="text-sm font-semibold uppercase tracking-[0.22em] text-[#d3b58f]">Kategori Populer</h3>
+      <ul class="mt-4 space-y-3 text-sm text-[#f4ede1]">
+        {topCategories.map((category) => (
+          <li>
+            <a href={`/kategori/${category.slug}/`} class="transition hover:text-[#d3b58f]">
+              {category.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="text-sm font-semibold uppercase tracking-[0.22em] text-[#d3b58f]">Inquiry</h3>
+      <p class="mt-4 text-sm leading-7 text-[#ddcfbe]">
+        Telegram:
+        <a
+          href={`https://t.me/${BRAND_TELEGRAM_HANDLE}`}
+          target="_blank"
+          rel="noreferrer"
+          class="font-semibold text-white underline decoration-[#d3b58f]/50 underline-offset-4"
+        >
+          @{BRAND_TELEGRAM_HANDLE}
+        </a>
+      </p>
+      <p class="mt-5 text-sm leading-7 text-[#ddcfbe]">
+        Siapkan judul produk atau tautan halaman produk saat menghubungi agar proses penawaran lebih cepat.
+      </p>
+    </div>
+  </div>
+
+  <div class="border-t border-white/10">
+    <div class="container-shell flex flex-col gap-2 py-5 text-xs text-[#c7b4a0] sm:flex-row sm:items-center sm:justify-between">
+      <p>&copy; {new Date().getFullYear()} {SITE_NAME}. Katalog furniture dan woodcraft Jepara.</p>
+      <p>Static catalog berbasis `products.json` untuk performa dan SEO yang lebih stabil.</p>
+    </div>
+  </div>
+</footer>

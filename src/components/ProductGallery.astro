@@ -1,0 +1,76 @@
+---
+interface Props {
+  images: string[];
+  title: string;
+}
+
+const { images, title } = Astro.props;
+const galleryId = `gallery-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+const displayImages = images.filter(Boolean);
+---
+
+<section class="surface-card overflow-hidden rounded-[2rem] p-4 sm:p-5">
+  <div class="overflow-hidden rounded-[1.4rem] bg-[rgba(127,79,42,0.08)]">
+    {displayImages.length > 0 ? (
+      <img
+        id={`${galleryId}-hero`}
+        src={displayImages[0]}
+        alt={title}
+        class="aspect-[4/4.5] w-full object-cover"
+        loading="eager"
+        decoding="async"
+      />
+    ) : (
+      <div class="flex aspect-[4/4.5] items-center justify-center px-8 text-center text-sm text-[color:var(--color-muted)]">
+        Foto produk belum tersedia
+      </div>
+    )}
+  </div>
+
+  {displayImages.length > 1 && (
+    <div class="mt-4 grid grid-cols-4 gap-3 sm:grid-cols-5">
+      {displayImages.map((image, index) => (
+        <button
+          type="button"
+          class="gallery-thumb overflow-hidden rounded-2xl border border-[color:var(--color-border)] bg-white/70"
+          data-gallery-thumb={galleryId}
+          data-image={image}
+          data-alt={`${title} ${index + 1}`}
+          aria-label={`Lihat gambar ${index + 1}`}
+        >
+          <img
+            src={image}
+            alt={`${title} ${index + 1}`}
+            class="aspect-square w-full object-cover"
+            loading="lazy"
+            decoding="async"
+          />
+        </button>
+      ))}
+    </div>
+  )}
+</section>
+
+<script is:inline>
+  if (!window.__galleryThumbBound) {
+    window.__galleryThumbBound = true;
+    document.addEventListener("click", (event) => {
+      const target = event.target instanceof Element ? event.target.closest("[data-gallery-thumb]") : null;
+      if (!(target instanceof HTMLButtonElement)) {
+        return;
+      }
+
+      const galleryId = target.dataset.galleryThumb;
+      const nextImage = target.dataset.image;
+      const nextAlt = target.dataset.alt;
+      const hero = galleryId ? document.getElementById(`${galleryId}-hero`) : null;
+
+      if (!(hero instanceof HTMLImageElement) || !nextImage) {
+        return;
+      }
+
+      hero.src = nextImage;
+      hero.alt = nextAlt ?? hero.alt;
+    });
+  }
+</script>

@@ -1,0 +1,67 @@
+---
+import type { PaginationMeta } from "@/types/catalog";
+
+interface Props {
+  meta: PaginationMeta;
+  makePageUrl: (page: number) => string;
+}
+
+const { meta, makePageUrl } = Astro.props;
+
+function buildPageWindow(totalPages: number, currentPage: number) {
+  if (totalPages <= 7) {
+    return Array.from({ length: totalPages }, (_, index) => index + 1);
+  }
+
+  const pages = new Set<number>([1, totalPages, currentPage - 1, currentPage, currentPage + 1]);
+  return [...pages]
+    .filter((page) => page >= 1 && page <= totalPages)
+    .sort((left, right) => left - right);
+}
+
+const pages = buildPageWindow(meta.totalPages, meta.currentPage);
+---
+
+{
+  meta.totalPages > 1 && (
+    <nav class="mt-10 flex flex-wrap items-center justify-center gap-3" aria-label="Navigasi halaman">
+      {meta.hasPrev && (
+        <a
+          href={makePageUrl(meta.currentPage - 1)}
+          class="rounded-full border border-[color:var(--color-border)] bg-white/70 px-4 py-2 text-sm font-medium text-[color:var(--color-body)] transition hover:border-[color:var(--color-wood)] hover:text-[color:var(--color-wood-deep)]"
+        >
+          Sebelumnya
+        </a>
+      )}
+
+      {pages.map((page, index) => (
+        <>
+          {index > 0 && page - pages[index - 1] > 1 && (
+            <span class="px-1 text-sm text-[color:var(--color-muted)]" aria-hidden="true">...</span>
+          )}
+          <a
+            href={makePageUrl(page)}
+            aria-current={page === meta.currentPage ? "page" : undefined}
+            class:list={[
+              "inline-flex h-11 min-w-11 items-center justify-center rounded-full border px-4 text-sm font-semibold transition",
+              page === meta.currentPage
+                ? "border-[color:var(--color-wood-deep)] bg-[color:var(--color-wood-deep)] text-white"
+                : "border-[color:var(--color-border)] bg-white/70 text-[color:var(--color-body)] hover:border-[color:var(--color-wood)] hover:text-[color:var(--color-wood-deep)]",
+            ]}
+          >
+            {page}
+          </a>
+        </>
+      ))}
+
+      {meta.hasNext && (
+        <a
+          href={makePageUrl(meta.currentPage + 1)}
+          class="rounded-full border border-[color:var(--color-border)] bg-white/70 px-4 py-2 text-sm font-medium text-[color:var(--color-body)] transition hover:border-[color:var(--color-wood)] hover:text-[color:var(--color-wood-deep)]"
+        >
+          Berikutnya
+        </a>
+      )}
+    </nav>
+  )
+}

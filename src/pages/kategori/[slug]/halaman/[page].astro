@@ -1,0 +1,61 @@
+---
+import Pagination from "@/components/Pagination.astro";
+import ProductCard from "@/components/ProductCard.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getAllCategories, getProductsByCategory, paginateProducts } from "@/data/catalog";
+import { PRODUCTS_PER_PAGE } from "@/config/site";
+
+export function getStaticPaths() {
+  return getAllCategories().flatMap((category) => {
+    const products = getProductsByCategory(category.slug);
+    const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
+
+    return Array.from({ length: Math.max(totalPages - 1, 0) }, (_, index) => index + 2).map((page) => {
+      const pagination = paginateProducts(products, page, PRODUCTS_PER_PAGE, (currentPage) =>
+        currentPage <= 1 ? `/kategori/${category.slug}/` : `/kategori/${category.slug}/halaman/${currentPage}/`,
+      );
+
+      return {
+        params: {
+          slug: category.slug,
+          page: String(page),
+        },
+        props: {
+          category,
+          products: pagination.items,
+          meta: pagination.meta,
+        },
+      };
+    });
+  });
+}
+
+const { category, products, meta } = Astro.props;
+---
+
+<BaseLayout
+  title={`${category.label} Halaman ${meta.currentPage}`}
+  description={`Halaman ${meta.currentPage} untuk kategori ${category.label}.`}
+  canonicalPath={`/kategori/${category.slug}/halaman/${meta.currentPage}/`}
+>
+  <section class="container-shell pb-6 pt-12">
+    <SectionHeading
+      eyebrow="Halaman Kategori"
+      title={`${category.label} - halaman ${meta.currentPage}`}
+      description="Pagination kategori tetap statis agar cepat diindeks dan konsisten dengan data produk."
+    />
+  </section>
+
+  <section class="container-shell pb-8">
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {products.map((product, index) => (
+        <ProductCard product={product} eager={index < 3} />
+      ))}
+    </div>
+    <Pagination
+      meta={meta}
+      makePageUrl={(page) => (page <= 1 ? `/kategori/${category.slug}/` : `/kategori/${category.slug}/halaman/${page}/`)}
+    />
+  </section>
+</BaseLayout>

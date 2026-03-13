@@ -1,0 +1,31 @@
+---
+import SectionHeading from "@/components/SectionHeading.astro";
+import ShopBrowser from "@/components/ShopBrowser.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getAllCategories, getAllProducts, paginateProducts } from "@/data/catalog";
+import { PRODUCTS_PER_PAGE } from "@/config/site";
+
+const products = getAllProducts();
+const categories = getAllCategories();
+const { items, meta } = paginateProducts(products, 1, PRODUCTS_PER_PAGE, (page) =>
+  page <= 1 ? "/shop/" : `/shop/halaman/${page}/`,
+);
+---
+
+<BaseLayout
+  title="Katalog Produk"
+  description="Jelajahi katalog furniture dan woodcraft Jepara dengan pagination statis, filter kategori, pencarian, dan sorting harga."
+  canonicalPath="/shop/"
+>
+  <section class="container-shell pb-6 pt-12">
+    <SectionHeading
+      eyebrow="Katalog Produk"
+      title="Pencarian dan filter katalog dibuat di atas schema asli `products.json`."
+      description="Halaman awal tetap ringan karena hanya merender satu halaman produk. Pencarian dan filter akan memuat index katalog terpisah saat diperlukan."
+    />
+  </section>
+
+  <section class="container-shell pb-8">
+    <ShopBrowser initialProducts={items} initialMeta={meta} categories={categories} />
+  </section>
+</BaseLayout>
