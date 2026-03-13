@@ -1,0 +1,95 @@
+import { c as createComponent } from './astro-component_bl35EZqZ.mjs';
+import 'piccolore';
+import { v as maybeRenderHead, a0 as addAttribute, J as renderTemplate } from './sequence_7oStfiHe.mjs';
+import { r as renderComponent } from './server_CSOThi1w.mjs';
+import 'clsx';
+import { $ as $$ProductCard } from './ProductCard_5HTFJipV.mjs';
+import { $ as $$SectionHeading } from './SectionHeading_DAZYkjk-.mjs';
+import { $ as $$BaseLayout, b as formatCount } from './BaseLayout_B8K3cQ30.mjs';
+import { c as getHighlightedProducts, d as getNewestProducts, g as getAllCategories, S as SITE_DESCRIPTION, e as SITE_NAME, b as getAllProducts } from './catalog_BdPK18__.mjs';
+
+const $$InquiryButton = createComponent(($$result, $$props, $$slots) => {
+  const Astro2 = $$result.createAstro($$props, $$slots);
+  Astro2.self = $$InquiryButton;
+  const { href, label = "Tanya via Telegram" } = Astro2.props;
+  return renderTemplate`${href && renderTemplate`${maybeRenderHead()}<a${addAttribute(href, "href")} target="_blank" rel="noreferrer" class="btn-primary">${label}</a>`}`;
+}, "E:/Gallery Jepara/src/components/InquiryButton.astro", void 0);
+
+const $$Index = createComponent(($$result, $$props, $$slots) => {
+  const categories = getAllCategories().slice(0, 8);
+  const highlightedProducts = getHighlightedProducts(6);
+  const newestProducts = getNewestProducts(6);
+  const allProducts = getAllProducts();
+  const heroInquiryUrl = highlightedProducts[0]?.telegramUrl ?? "https://t.me/galleryfurnicraftjepara";
+  const sellingPoints = [
+    {
+      title: "Bisa custom sesuai kebutuhan",
+      description: "Konsultasikan model, ukuran, detail ukiran, dan finishing untuk ruang yang Anda siapkan."
+    },
+    {
+      title: "Cocok untuk berbagai kebutuhan",
+      description: "Pilihan produk sesuai untuk rumah, cafe, villa, hotel, hingga proyek interior."
+    },
+    {
+      title: "Material dan finishing bisa dibahas",
+      description: "Anda bisa menanyakan bahan, warna, tampilan akhir, dan penyesuaian sebelum pesan."
+    },
+    {
+      title: "Konsultasi lebih mudah",
+      description: "Tanya stok, harga, ongkir, atau detail produk langsung lewat Telegram tanpa proses yang rumit."
+    }
+  ];
+  const categoryNotes = {
+    "handcraft-souvenir-kayu": "Pilihan dekorasi, souvenir, dan aksen kayu untuk hadiah maupun interior.",
+    "patung": "Koleksi patung kayu dan ukiran artistik untuk rumah, lobby, cafe, dan dekorasi proyek.",
+    "furniture-taman": "Model furniture outdoor untuk teras, taman, villa, dan area santai.",
+    "kursi-teras": "Pilihan kursi teras yang nyaman untuk area depan rumah, balkon, atau taman.",
+    "kursi-cafe-bar": "Kursi untuk cafe, bar, dan area komersial dengan tampilan rapi dan berkarakter.",
+    "meja-makan": "Meja makan kayu untuk rumah, villa, restoran, dan ruang makan berkelas.",
+    "furniture-akar-jati": "Karakter akar jati yang kuat untuk tampilan natural dan berkesan.",
+    "meja-kopi": "Pilihan meja kopi untuk ruang tamu, lounge, cafe, dan area santai."
+  };
+  return renderTemplate`${renderComponent($$result, "BaseLayout", $$BaseLayout, { "title": SITE_NAME, "description": SITE_DESCRIPTION }, { "default": ($$result2) => renderTemplate` ${maybeRenderHead()}<section class="container-shell pb-10 pt-12 sm:pt-16"> <div class="surface-card grid overflow-hidden rounded-[2.4rem] lg:grid-cols-[1.02fr_0.98fr]"> <div class="p-7 sm:p-10 lg:p-12"> <p class="text-[0.72rem] font-semibold uppercase tracking-[0.3em] text-[color:var(--color-wood-deep)]">
+Furniture Jepara
+</p> <h1 class="serif-display mt-4 max-w-2xl text-4xl font-semibold leading-tight text-[color:var(--color-ink)] sm:text-5xl lg:text-[3.5rem]">
+Furniture Jepara untuk rumah, cafe, dan proyek interior.
+</h1> <p class="mt-5 max-w-xl text-base leading-8 text-[color:var(--color-muted)] sm:text-lg">
+Temukan meja, kursi, buffet, dekorasi, patung, dan woodcraft dengan tampilan katalog yang mudah ditelusuri. Saat sudah menemukan model yang cocok, Anda bisa langsung konsultasi ukuran, finishing, stok, dan pengiriman via Telegram.
+</p> <p class="mt-8 text-sm leading-7 text-[color:var(--color-muted)]">
+Cocok untuk kebutuhan rumah, usaha, villa, hotel, dan pesanan custom.
+</p> <dl class="mt-9 grid gap-4 sm:grid-cols-3"> <div class="rounded-[1.5rem] border border-[color:var(--color-border)] bg-white/72 p-4"> <dt class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Pilihan produk</dt> <dd class="serif-display mt-2 text-2xl font-semibold text-[color:var(--color-ink)]"> ${formatCount(allProducts.length, "item")} </dd> </div> <div class="rounded-[1.5rem] border border-[color:var(--color-border)] bg-[rgba(95,116,105,0.07)] p-4"> <dt class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Kategori pilihan</dt> <dd class="serif-display mt-2 text-2xl font-semibold text-[color:var(--color-ink)]"> ${formatCount(getAllCategories().length, "kategori")} </dd> </div> <div class="rounded-[1.5rem] border border-[color:var(--color-border)] bg-[rgba(217,202,183,0.18)] p-4"> <dt class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Custom & konsultasi</dt> <dd class="serif-display mt-2 text-2xl font-semibold text-[color:var(--color-ink)]">Mudah</dd> </div> </dl> </div> <div class="relative min-h-[24rem] bg-[linear-gradient(160deg,rgba(245,240,232,0.96),rgba(238,242,236,0.92))] p-5 sm:p-7"> <div class="absolute inset-x-10 top-10 h-28 rounded-full bg-[rgba(217,202,183,0.16)] blur-3xl"></div> <div class="relative grid h-full gap-4 sm:grid-cols-2"> ${highlightedProducts.slice(0, 3).map((product, index) => renderTemplate`<a${addAttribute(`/produk/${product.slug}/`, "href")}${addAttribute([
+    "overflow-hidden rounded-[1.7rem] border border-white/80 bg-white/86 shadow-[0_18px_45px_rgba(38,44,51,0.08)]",
+    index === 0 ? "sm:col-span-2" : ""
+  ], "class:list")}> ${product.featuredImage ? renderTemplate`<img${addAttribute(product.featuredImage, "src")}${addAttribute(product.title, "alt")}${addAttribute([
+    "w-full object-cover",
+    index === 0 ? "aspect-[2/1.15]" : "aspect-[1/1.02]"
+  ], "class:list")}${addAttribute(index === 0 ? "eager" : "lazy", "loading")} decoding="async">` : renderTemplate`<div${addAttribute(["flex w-full items-center justify-center px-6 text-center text-sm text-[color:var(--color-muted)]", index === 0 ? "aspect-[2/1.15]" : "aspect-[1/1.02]"], "class:list")}>
+Foto produk belum tersedia
+</div>`} <div class="space-y-2 p-4 text-[color:var(--color-ink)]"> <p class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-wood-deep)]"> ${product.primaryCategoryLabel ?? "Produk Pilihan"} </p> <h2 class="serif-display text-lg font-semibold leading-snug">${product.title}</h2> <p class="text-sm font-medium text-[color:var(--color-body)]">${product.priceFormatted ?? "Hubungi kami"}</p> </div> </a>`)} </div> </div> </div> </section> <section class="container-shell mt-12"> ${renderComponent($$result2, "SectionHeading", $$SectionHeading, { "eyebrow": "Kategori Pilihan", "title": "Mulai dari kategori yang paling sering dicari.", "description": "Pilih kategori sesuai kebutuhan ruang, fungsi, atau gaya yang Anda inginkan." })} <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"> ${categories.map((category, index) => renderTemplate`<a${addAttribute(`/kategori/${category.slug}/`, "href")}${addAttribute([
+    "surface-card rounded-[1.8rem] p-5 transition hover:-translate-y-1",
+    index % 3 === 1 ? "bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(244,239,231,0.92))]" : ""
+  ], "class:list")}> <p class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-wood-deep)]">Kategori</p> <h3 class="serif-display mt-3 text-2xl font-semibold text-[color:var(--color-ink)]">${category.label}</h3> <p class="mt-3 text-sm leading-6 text-[color:var(--color-muted)]"> ${categoryNotes[category.slug] ?? `${formatCount(category.count, "produk")} siap Anda telusuri di kategori ini.`} </p> <span class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--color-wood-deep)]">
+Lihat produk
+</span> </a>`)} </div> </section> <section class="container-shell mt-20"> ${renderComponent($$result2, "SectionHeading", $$SectionHeading, { "eyebrow": "Produk Pilihan", "title": "Pilihan yang layak Anda lihat lebih dulu.", "description": "Model favorit untuk rumah, cafe, dekorasi, dan kebutuhan custom." })} <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"> ${highlightedProducts.map((product, index) => renderTemplate`${renderComponent($$result2, "ProductCard", $$ProductCard, { "product": product, "eager": index < 3 })}`)} </div> </section> <section class="container-shell mt-20"> <div class="surface-card rounded-[2.2rem] p-7 sm:p-10"> ${renderComponent($$result2, "SectionHeading", $$SectionHeading, { "eyebrow": "Kenapa Memilih Kami", "title": "Lebih nyaman saat model, ukuran, dan finishing bisa dibahas sejak awal.", "description": "Kami memudahkan Anda menilai produk lalu lanjut berkonsultasi sebelum pemesanan." })} <div class="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4"> ${sellingPoints.map((item, index) => renderTemplate`<div class="rounded-[1.6rem] border border-[color:var(--color-border)] bg-white/70 p-5"> <p class="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--color-wood-deep)]">
+0${index + 1} </p> <h3 class="mt-3 text-lg font-semibold text-[color:var(--color-ink)]">${item.title}</h3> <p class="mt-2 text-sm leading-7 text-[color:var(--color-body)]">${item.description}</p> </div>`)} </div> </div> </section> <section class="container-shell mt-20"> ${renderComponent($$result2, "SectionHeading", $$SectionHeading, { "eyebrow": "Terbaru", "title": "Lihat produk yang baru ditambahkan.", "description": "Temukan model terbaru untuk melengkapi rumah, usaha, atau proyek interior Anda." })} <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"> ${newestProducts.map((product) => renderTemplate`${renderComponent($$result2, "ProductCard", $$ProductCard, { "product": product })}`)} </div> </section> <section class="container-shell mt-20 pb-10"> <div class="rounded-[2.4rem] bg-[linear-gradient(135deg,#2f4742,#415952)] px-7 py-10 text-white shadow-[0_28px_60px_rgba(47,71,66,0.22)] sm:px-10"> <p class="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[#d9cab7]">Butuh Bantuan Memilih?</p> <h2 class="serif-display mt-4 text-3xl font-semibold sm:text-4xl">
+Tanya model, ukuran, finishing, atau ongkir sebelum pesan.
+</h2> <p class="mt-4 max-w-2xl text-base leading-8 text-white/82">
+Kirim judul produk yang Anda suka, lalu lanjutkan konsultasi lewat Telegram untuk kebutuhan rumah, cafe, villa, hotel, atau pesanan custom.
+</p> <div class="mt-8 flex flex-col gap-3 sm:flex-row"> ${renderComponent($$result2, "InquiryButton", $$InquiryButton, { "href": heroInquiryUrl, "label": "Konsultasi via Telegram" })} <a href="/shop/" class="inline-flex items-center justify-center rounded-full border border-white/18 bg-white/10 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/15">
+Lihat semua produk
+</a> </div> </div> </section> ` })}`;
+}, "E:/Gallery Jepara/src/pages/index.astro", void 0);
+
+const $$file = "E:/Gallery Jepara/src/pages/index.astro";
+const $$url = "";
+
+const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: $$Index,
+  file: $$file,
+  url: $$url
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const page = () => _page;
+
+export { page };

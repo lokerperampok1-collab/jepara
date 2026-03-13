@@ -1,4 +1,6 @@
 ---
+export const prerender = true;
+
 import InquiryButton from "@/components/InquiryButton.astro";
 import ProductCard from "@/components/ProductCard.astro";
 import ProductGallery from "@/components/ProductGallery.astro";
@@ -7,6 +9,7 @@ import SectionHeading from "@/components/SectionHeading.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getAllProducts, getProductBySlug, getRelatedProducts } from "@/data/catalog";
 import { SITE_NAME } from "@/config/site";
+import { getRecommendedDpPercentage } from "@/server/orders";
 import { formatDateIndo, toCanonicalUrl } from "@/utils/format";
 
 export function getStaticPaths() {
@@ -24,6 +27,8 @@ if (!product) {
 }
 
 const relatedProducts = getRelatedProducts(product, 4);
+const canCheckout = typeof product.priceValue === "number";
+const recommendedDpPercentage = getRecommendedDpPercentage(product);
 const pageDescription =
   product.excerpt ||
   product.descriptionParagraphs[0] ||
@@ -115,7 +120,12 @@ const structuredData = {
           </dl>
 
           <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-            <InquiryButton href={product.telegramUrl} label="Tanya harga & detail" />
+            {canCheckout ? (
+              <a href={`/checkout/${product.slug}/`} class="btn-primary">
+                {recommendedDpPercentage > 0 ? "Pesan & bayar DP" : "Pesan sekarang"}
+              </a>
+            ) : null}
+            <InquiryButton href={product.telegramUrl} label={canCheckout ? "Konsultasi via Telegram" : "Tanya harga & detail"} />
           </div>
         </div>
 

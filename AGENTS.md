@@ -1,11 +1,11 @@
 # AGENTS.md
 
 ## Repository expectations
-- This repo is an Astro + TypeScript + Tailwind product catalog website.
-- The single source of truth for products is `products.json`.
-- Do not introduce a database, admin panel, auth, or checkout flow unless explicitly requested.
-- This website is a catalog and inquiry site, not a full ecommerce checkout system.
-- Keep the project static-first. Product, category, and pagination routes should be generated from data when possible.
+- This repo is an Astro + TypeScript + Tailwind furniture catalog website with manual order flow.
+- The single source of truth for product content is `products.json`.
+- Catalog browsing and SEO stay product-first. Payments are manual by default, not gateway-driven.
+- Do not introduce marketplace features, full cart logic, or automated payment gateway flows unless explicitly requested.
+- Keep product, category, and pagination routes generated from catalog data when possible.
 
 ## Data rules
 - Preserve the raw product schema from `products.json`.
@@ -25,6 +25,7 @@
 - On listing pages, render only the image needed for the card.
 - Avoid unnecessary hydration.
 - Do not mirror remote product images locally unless explicitly required.
+- Keep checkout and order pages simple, lightweight, and trustworthy.
 
 ## Code style
 - Keep data utilities separate from UI components.
@@ -32,6 +33,7 @@
 - Use strict TypeScript types.
 - Do not perform broad refactors unless necessary for the current task.
 - When changing routing or data mapping, verify generated pages still match real product records.
+- Operational order data must stay out of `products.json`.
 
 ## Commands
 - Install: `npm install`
@@ -42,9 +44,10 @@
 
 ## Before finishing any meaningful change
 - Run the build.
-- Fix TypeScript and route issues.
-- Sanity-check at least one shop page, one product page, and one category page.
+- Fix TypeScript, server route, and build issues.
+- Sanity-check at least one shop page, one product page, one category page, and one order-related route.
 
-## Inquiry flow
-- Main conversion path is Telegram, using the username parsed from `waPhone`.
-- Product CTA should include real product context in the Telegram message when the handle supports it.
+## Conversion flow
+- Telegram remains available for consultation, using the username parsed from `waPhone`.
+- Website checkout supports manual payment, payment confirmation upload, and admin status updates.
+- Product CTA can offer both order checkout and Telegram consultation when price data is available.

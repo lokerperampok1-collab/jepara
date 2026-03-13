@@ -1,0 +1,268 @@
+---
+export const prerender = true;
+
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getAllProducts, getProductBySlug } from "@/data/catalog";
+import {
+  MANUAL_PAYMENT_CHANNELS,
+  ORDER_DEFAULT_COUNTRY,
+} from "@/config/commerce";
+import { buildPaymentBreakdown, getRecommendedDpPercentage } from "@/server/orders";
+import { formatCurrency } from "@/utils/format";
+
+export function getStaticPaths() {
+  return getAllProducts()
+    .filter((product) => typeof product.priceValue === "number")
+    .map((product) => ({
+      params: {
+        slug: product.slug,
+      },
+    }));
+}
+
+const product = getProductBySlug(Astro.params.slug ?? "");
+const errorMessage = Astro.url.searchParams.get("error");
+
+if (!product || typeof product.priceValue !== "number") {
+  throw new Error("Produk tidak tersedia untuk checkout.");
+}
+
+const recommendedDpPercentage = getRecommendedDpPercentage(product);
+const dpBreakdown = buildPaymentBreakdown(product, "dp", "bank-transfer");
+const fullBreakdown = buildPaymentBreakdown(product, "full", "bank-transfer");
+---
+
+<BaseLayout
+  title={`Pesan ${product.title}`}
+  description={`Form pemesanan untuk ${product.title}. Pilih pembayaran DP atau penuh, lalu lanjutkan instruksi pembayaran manual.`}
+  canonicalPath={`/checkout/${product.slug}/`}
+  image={product.featuredImage}
+>
+  <section class="container-shell pb-12 pt-12">
+    <nav class="mb-6 flex flex-wrap items-center gap-2 text-sm text-[color:var(--color-muted)]">
+      <a href="/" class="transition hover:text-[color:var(--color-wood)]">Beranda</a>
+      <span>/</span>
+      <a href="/shop/" class="transition hover:text-[color:var(--color-wood)]">Katalog</a>
+      <span>/</span>
+      <a href={`/produk/${product.slug}/`} class="transition hover:text-[color:var(--color-wood)]">{product.title}</a>
+      <span>/</span>
+      <span class="text-[color:var(--color-body)]">Checkout</span>
+    </nav>
+
+    <div class="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
+      <aside class="surface-card rounded-[2rem] p-6 sm:p-7">
+        {product.featuredImage && (
+          <img src={product.featuredImage} alt={product.title} class="aspect-[4/3] w-full rounded-[1.6rem] object-cover" />
+        )}
+        <p class="mt-5 text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--color-wood-deep)]">
+          Ringkasan Produk
+        </p>
+        <h1 class="serif-display mt-3 text-3xl font-semibold leading-tight text-[color:var(--color-ink)]">
+          {product.title}
+        </h1>
+        <p class="mt-4 text-2xl font-semibold text-[color:var(--color-wood-deep)]">{product.priceFormatted}</p>
+        {product.excerpt && <p class="mt-4 text-sm leading-7 text-[color:var(--color-muted)]">{product.excerpt}</p>}
+
+        <div class="mt-6 space-y-4">
+          <div class="rounded-[1.3rem] border border-[color:var(--color-border)] bg-white/75 p-4">
+            <p class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Bayar DP</p>
+            <p class="mt-2 text-lg font-semibold text-[color:var(--color-ink)]">{formatCurrency(dpBreakdown.amountDueNow)}</p>
+            <p class="mt-2 text-sm leading-6 text-[color:var(--color-muted)]">
+              {recommendedDpPercentage > 0
+                ? `Rekomendasi DP ${recommendedDpPercentage}% untuk produk ini.`
+                : "Produk ini lebih cocok dibayar penuh agar proses lebih cepat."}
+            </p>
+          </div>
+          <div class="rounded-[1.3rem] border border-[color:var(--color-border)] bg-white/75 p-4">
+            <p class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Bayar Penuh</p>
+            <p class="mt-2 text-lg font-semibold text-[color:var(--color-ink)]">{formatCurrency(fullBreakdown.amountDueNow)}</p>
+            <p class="mt-2 text-sm leading-6 text-[color:var(--color-muted)]">
+              Cocok untuk pesanan siap proses tanpa menunggu pelunasan.
+            </p>
+          </div>
+        </div>
+      </aside>
+
+      <section class="surface-card rounded-[2rem] p-6 sm:p-8">
+        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--color-wood-deep)]">Checkout Manual</p>
+        <h2 class="serif-display mt-3 text-3xl font-semibold text-[color:var(--color-ink)]">Lengkapi data pesanan Anda</h2>
+        <p class="mt-4 max-w-2xl text-sm leading-7 text-[color:var(--color-muted)]">
+          Setelah form ini dikirim, website akan membuat kode order dan menampilkan instruksi pembayaran manual. Ongkir
+          furniture ke Malaysia akan dikonfirmasi admin sesuai alamat, ukuran, dan kebutuhan pengiriman.
+        </p>
+
+        {errorMessage && <div class="notice-error mt-6">{errorMessage}</div>}
+
+        <div id="checkout-submit-error" class="notice-error mt-6 hidden"></div>
+
+        <form id="checkout-form" action="/api/orders/create/" method="post" class="mt-8 space-y-8">
+          <input type="hidden" name="productSlug" value={product.slug} />
+
+          <div class="grid gap-5 sm:grid-cols-2">
+            <label class="form-field">
+              <span>Nama lengkap</span>
+              <input name="customerName" type="text" required placeholder="Nama penerima pesanan" />
+            </label>
+            <label class="form-field">
+              <span>No. WhatsApp / Telegram</span>
+              <input name="customerPhone" type="text" required placeholder="+60..." />
+            </label>
+            <label class="form-field">
+              <span>Email</span>
+              <input name="customerEmail" type="email" placeholder="opsional@email.com" />
+            </label>
+            <label class="form-field">
+              <span>Jumlah</span>
+              <input name="quantity" type="number" min="1" value="1" required />
+            </label>
+            <label class="form-field">
+              <span>Negara</span>
+              <input name="country" type="text" required value={ORDER_DEFAULT_COUNTRY} />
+            </label>
+            <label class="form-field">
+              <span>State / Negeri</span>
+              <input name="state" type="text" required placeholder="Johor, Selangor, Sabah..." />
+            </label>
+            <label class="form-field">
+              <span>Kota</span>
+              <input name="city" type="text" required placeholder="Johor Bahru, Kuala Lumpur..." />
+            </label>
+            <label class="form-field">
+              <span>Postcode</span>
+              <input name="postcode" type="text" placeholder="81200" />
+            </label>
+          </div>
+
+          <label class="form-field">
+            <span>Alamat lengkap</span>
+            <textarea name="address" rows="4" required placeholder="Alamat lengkap penerima di Malaysia"></textarea>
+          </label>
+
+          <label class="form-field">
+            <span>Catatan model / ukuran / finishing</span>
+            <textarea
+              name="notes"
+              rows="4"
+              placeholder="Tulis kebutuhan custom, warna finishing, atau catatan lain bila ada."
+            ></textarea>
+          </label>
+
+          <fieldset class="space-y-3">
+            <legend class="text-sm font-semibold text-[color:var(--color-ink)]">Pilih skema pembayaran</legend>
+            <label class="choice-card">
+              <input
+                type="radio"
+                name="paymentType"
+                value="dp"
+                checked={recommendedDpPercentage > 0}
+              />
+              <div>
+                <p class="font-semibold text-[color:var(--color-ink)]">Bayar DP</p>
+                <p class="mt-1 text-sm leading-6 text-[color:var(--color-muted)]">
+                  Bayar awal {recommendedDpPercentage > 0 ? `${recommendedDpPercentage}%` : "sebagian"} sebesar {formatCurrency(dpBreakdown.amountDueNow)}.
+                </p>
+              </div>
+            </label>
+            <label class="choice-card">
+              <input
+                type="radio"
+                name="paymentType"
+                value="full"
+                checked={recommendedDpPercentage === 0}
+              />
+              <div>
+                <p class="font-semibold text-[color:var(--color-ink)]">Bayar penuh</p>
+                <p class="mt-1 text-sm leading-6 text-[color:var(--color-muted)]">
+                  Bayar penuh {formatCurrency(fullBreakdown.amountDueNow)} untuk mempercepat proses pesanan.
+                </p>
+              </div>
+            </label>
+          </fieldset>
+
+          <fieldset class="space-y-3">
+            <legend class="text-sm font-semibold text-[color:var(--color-ink)]">Metode pembayaran manual</legend>
+            {MANUAL_PAYMENT_CHANNELS.map((channel, index) => (
+              <label class="choice-card">
+                <input type="radio" name="paymentMethod" value={channel.id} checked={index === 0} />
+                <div>
+                  <p class="font-semibold text-[color:var(--color-ink)]">{channel.label}</p>
+                  <p class="mt-1 text-sm leading-6 text-[color:var(--color-muted)]">{channel.description}</p>
+                </div>
+              </label>
+            ))}
+          </fieldset>
+
+          <div class="rounded-[1.4rem] border border-[color:var(--color-border)] bg-[rgba(255,255,255,0.72)] p-4 text-sm leading-7 text-[color:var(--color-muted)]">
+            Setelah checkout, Anda akan mendapatkan kode order, nominal pembayaran, dan halaman untuk upload bukti
+            transfer. Admin akan mengonfirmasi ongkir, finishing, dan pelunasan bila pesanan memakai skema DP.
+          </div>
+
+          <div class="flex flex-col gap-3 sm:flex-row">
+            <button type="submit" class="btn-primary" data-default-label="Buat pesanan">Buat pesanan</button>
+            <a href={`/produk/${product.slug}/`} class="btn-secondary">Kembali ke produk</a>
+          </div>
+        </form>
+      </section>
+    </div>
+  </section>
+
+  <script is:inline>
+    const checkoutForm = document.getElementById("checkout-form");
+    const checkoutError = document.getElementById("checkout-submit-error");
+
+    if (checkoutForm instanceof HTMLFormElement) {
+      const submitButton = checkoutForm.querySelector('button[type="submit"]');
+      const defaultLabel = submitButton?.getAttribute("data-default-label") ?? "Buat pesanan";
+
+      checkoutForm.addEventListener("submit", async (event) => {
+        if (!window.fetch || !window.FormData) {
+          return;
+        }
+
+        event.preventDefault();
+
+        if (checkoutError) {
+          checkoutError.textContent = "";
+          checkoutError.classList.add("hidden");
+        }
+
+        if (submitButton instanceof HTMLButtonElement) {
+          submitButton.disabled = true;
+          submitButton.textContent = "Memproses...";
+        }
+
+        try {
+          const response = await fetch(checkoutForm.action, {
+            method: "POST",
+            body: new FormData(checkoutForm),
+            redirect: "follow",
+          });
+
+          const destination = response.redirected
+            ? response.url
+            : response.headers.get("Location") ?? response.url;
+
+          if (destination && destination !== window.location.href) {
+            window.location.assign(destination);
+            return;
+          }
+
+          throw new Error("Halaman pembayaran belum bisa dibuka otomatis.");
+        } catch (error) {
+          if (checkoutError) {
+            checkoutError.textContent =
+              error instanceof Error
+                ? `${error.message} Pesanan mungkin sudah masuk. Cek halaman pesanan atau admin.`
+                : "Pesanan mungkin sudah masuk, tetapi redirect belum berhasil. Cek halaman pesanan atau admin.";
+            checkoutError.classList.remove("hidden");
+          }
+        } finally {
+          if (submitButton instanceof HTMLButtonElement) {
+            submitButton.disabled = false;
+            submitButton.textContent = defaultLabel;
+          }
+        }
+      });
+    }
+  </script>
+</BaseLayout>

@@ -17,3 +17,15 @@ export function toCanonicalUrl(pathname: string) {
 export function formatCount(value: number, noun: string) {
   return `${new Intl.NumberFormat("id-ID").format(value)} ${noun}`;
 }
+
+export function formatCurrency(value: number | null | undefined) {
+  if (typeof value !== "number" || Number.isNaN(value)) {
+    return "Menunggu konfirmasi";
+  }
+
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0,
+  }).format(value);
+}

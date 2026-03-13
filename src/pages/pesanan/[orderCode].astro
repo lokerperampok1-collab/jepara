@@ -1,0 +1,206 @@
+---
+export const prerender = false;
+
+import OrderStatusPill from "@/components/OrderStatusPill.astro";
+import PaymentInstructions from "@/components/PaymentInstructions.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getOrderByCode, getOrderStatusLabel } from "@/server/orders";
+import { formatCurrency, formatDateIndo } from "@/utils/format";
+
+const orderCode = Astro.params.orderCode ?? "";
+const order = await getOrderByCode(orderCode);
+const successMessage = Astro.url.searchParams.get("success");
+const errorMessage = Astro.url.searchParams.get("error");
+
+if (!order) {
+  Astro.response.status = 404;
+}
+---
+
+<BaseLayout
+  title={order ? `Pesanan ${order.orderCode}` : "Pesanan tidak ditemukan"}
+  description="Lihat status pesanan, instruksi pembayaran, dan konfirmasi pembayaran manual Gallery Furnicraft Jepara."
+  canonicalPath={order ? `/pesanan/${order.orderCode}/` : "/cek-pesanan/"}
+>
+  <section class="container-shell pb-12 pt-12">
+    {order ? (
+      <div class="space-y-8">
+        <div class="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--color-wood-deep)]">Kode Order</p>
+            <h1 class="serif-display mt-2 text-3xl font-semibold text-[color:var(--color-ink)]">{order.orderCode}</h1>
+            <p class="mt-3 text-sm leading-7 text-[color:var(--color-muted)]">
+              Pesanan untuk {order.item.title}. Simpan halaman ini untuk cek pembayaran, status proses, dan resi pengiriman.
+            </p>
+          </div>
+          <OrderStatusPill status={order.status} />
+        </div>
+
+        {successMessage && <div class="notice-success">{successMessage}</div>}
+        {errorMessage && <div class="notice-error">{errorMessage}</div>}
+
+        <div class="grid gap-8 lg:grid-cols-[0.92fr_1.08fr]">
+          <div class="space-y-8">
+            <section class="surface-card rounded-[2rem] p-6 sm:p-7">
+              <p class="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--color-muted)]">Ringkasan Pesanan</p>
+              <div class="mt-5 flex gap-4">
+                {order.item.featuredImage && (
+                  <img
+                    src={order.item.featuredImage}
+                    alt={order.item.title}
+                    class="h-28 w-28 rounded-[1.4rem] object-cover"
+                  />
+                )}
+                <div class="flex-1">
+                  <h2 class="serif-display text-2xl font-semibold text-[color:var(--color-ink)]">{order.item.title}</h2>
+                  <p class="mt-2 text-sm leading-7 text-[color:var(--color-muted)]">
+                    Qty {order.quantity} | {order.payment.type === "dp" ? "Skema DP" : "Bayar penuh"}
+                  </p>
+                  <p class="mt-3 text-lg font-semibold text-[color:var(--color-wood-deep)]">
+                    {formatCurrency(order.payment.fullAmount)}
+                  </p>
+                </div>
+              </div>
+
+              <dl class="mt-6 grid gap-4 sm:grid-cols-2">
+                <div class="rounded-[1.2rem] border border-[color:var(--color-border)] bg-white/80 p-4">
+                  <dt class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Dibuat</dt>
+                  <dd class="mt-2 text-sm font-semibold text-[color:var(--color-body)]">{formatDateIndo(order.createdAt)}</dd>
+                </div>
+                <div class="rounded-[1.2rem] border border-[color:var(--color-border)] bg-white/80 p-4">
+                  <dt class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Status</dt>
+                  <dd class="mt-2 text-sm font-semibold text-[color:var(--color-body)]">{getOrderStatusLabel(order.status)}</dd>
+                </div>
+              </dl>
+
+              <div class="mt-6 rounded-[1.2rem] border border-[color:var(--color-border)] bg-white/75 p-4">
+                <p class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Alamat Pengiriman</p>
+                <p class="mt-2 text-sm font-semibold text-[color:var(--color-body)]">{order.customer.name}</p>
+                <p class="mt-1 text-sm leading-7 text-[color:var(--color-muted)]">
+                  {order.customer.address}, {order.customer.city}, {order.customer.state} {order.customer.postcode}, {order.customer.country}
+                </p>
+                <p class="mt-2 text-sm leading-7 text-[color:var(--color-muted)]">
+                  Kontak: {order.customer.phone}{order.customer.email ? ` | ${order.customer.email}` : ""}
+                </p>
+              </div>
+
+              {(order.courierName || order.trackingNumber) && (
+                <div class="mt-6 rounded-[1.2rem] border border-[color:var(--color-border)] bg-white/75 p-4">
+                  <p class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Pengiriman</p>
+                  <p class="mt-2 text-sm font-semibold text-[color:var(--color-body)]">
+                    {order.courierName || "Kurir akan diupdate admin"}
+                  </p>
+                  {order.trackingNumber && (
+                    <p class="mt-1 text-sm leading-7 text-[color:var(--color-muted)]">Resi: {order.trackingNumber}</p>
+                  )}
+                  {order.trackingUrl && (
+                    <a
+                      href={order.trackingUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      class="mt-3 inline-flex text-sm font-semibold text-[color:var(--color-wood-deep)] underline underline-offset-4"
+                    >
+                      Lacak pengiriman
+                    </a>
+                  )}
+                </div>
+              )}
+            </section>
+
+            <PaymentInstructions
+              method={order.payment.paymentMethod}
+              amount={order.payment.amountDueNow}
+              expiresAt={order.expiresAt}
+              remainingAmount={order.payment.remainingAmount}
+            />
+          </div>
+
+          <div class="space-y-8">
+            <section class="surface-card rounded-[2rem] p-6 sm:p-8">
+              <p class="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--color-wood-deep)]">Konfirmasi Pembayaran</p>
+              <h2 class="serif-display mt-3 text-3xl font-semibold text-[color:var(--color-ink)]">Upload bukti transfer</h2>
+              <p class="mt-4 text-sm leading-7 text-[color:var(--color-muted)]">
+                Setelah transfer, kirim bukti pembayaran agar admin bisa memverifikasi dan melanjutkan pesanan Anda.
+              </p>
+
+              <form
+                action="/api/orders/confirm-payment/"
+                method="post"
+                enctype="multipart/form-data"
+                class="mt-8 space-y-5"
+              >
+                <input type="hidden" name="orderCode" value={order.orderCode} />
+                <div class="grid gap-5 sm:grid-cols-2">
+                  <label class="form-field">
+                    <span>Nama pengirim</span>
+                    <input name="payerName" type="text" required placeholder="Sesuai rekening / e-wallet" />
+                  </label>
+                  <label class="form-field">
+                    <span>Bank / e-wallet pengirim</span>
+                    <input name="payerBank" type="text" required placeholder="Maybank, CIMB, Touch 'n Go, dll." />
+                  </label>
+                  <label class="form-field">
+                    <span>Nominal dibayar</span>
+                    <input name="amountPaid" type="number" min="0" step="1" placeholder="Contoh: 2650000" />
+                  </label>
+                  <label class="form-field">
+                    <span>Tanggal & waktu bayar</span>
+                    <input name="paidAt" type="datetime-local" />
+                  </label>
+                </div>
+                <label class="form-field">
+                  <span>Bukti transfer</span>
+                  <input name="proofFile" type="file" accept=".jpg,.jpeg,.png,.webp,.pdf" />
+                </label>
+                <label class="form-field">
+                  <span>Catatan pembayaran</span>
+                  <textarea
+                    name="paymentNotes"
+                    rows="4"
+                    placeholder="Opsional: beri catatan bila transfer dilakukan dari akun pihak lain."
+                  ></textarea>
+                </label>
+                <button type="submit" class="btn-primary">Kirim konfirmasi pembayaran</button>
+              </form>
+            </section>
+
+            <section class="surface-card rounded-[2rem] p-6 sm:p-7">
+              <p class="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--color-wood-deep)]">Riwayat Pembayaran</p>
+              {order.paymentConfirmations.length > 0 ? (
+                <div class="mt-6 space-y-4">
+                  {order.paymentConfirmations.map((confirmation) => (
+                    <article class="rounded-[1.3rem] border border-[color:var(--color-border)] bg-white/80 p-4">
+                      <div class="flex flex-wrap items-center justify-between gap-3">
+                        <p class="text-sm font-semibold text-[color:var(--color-ink)]">{confirmation.payerName}</p>
+                        <p class="text-sm text-[color:var(--color-muted)]">{formatDateIndo(confirmation.createdAt)}</p>
+                      </div>
+                      <p class="mt-2 text-sm leading-7 text-[color:var(--color-muted)]">
+                        {confirmation.payerBank}
+                        {confirmation.amountPaid ? ` | ${formatCurrency(confirmation.amountPaid)}` : ""}
+                      </p>
+                      {confirmation.notes && (
+                        <p class="mt-2 text-sm leading-7 text-[color:var(--color-muted)]">{confirmation.notes}</p>
+                      )}
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <p class="mt-5 text-sm leading-7 text-[color:var(--color-muted)]">
+                  Belum ada konfirmasi pembayaran yang masuk untuk order ini.
+                </p>
+              )}
+            </section>
+          </div>
+        </div>
+      </div>
+    ) : (
+      <div class="surface-card rounded-[2rem] p-8 text-center">
+        <h1 class="serif-display text-3xl font-semibold text-[color:var(--color-ink)]">Pesanan tidak ditemukan</h1>
+        <p class="mx-auto mt-4 max-w-xl text-sm leading-7 text-[color:var(--color-muted)]">
+          Periksa kembali kode order Anda, lalu gunakan halaman cek pesanan untuk mencarinya.
+        </p>
+        <a href="/cek-pesanan/" class="btn-primary mt-6">Cek pesanan</a>
+      </div>
+    )}
+  </section>
+</BaseLayout>

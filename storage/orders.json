@@ -1,0 +1,46 @@
+{
+  "orders": [
+    {
+      "id": "2db69fdb-e6eb-4c36-9648-58279a256f08",
+      "orderCode": "GFJ-20260313-C98C",
+      "createdAt": "2026-03-13T13:35:48.464Z",
+      "updatedAt": "2026-03-13T13:35:48.464Z",
+      "expiresAt": "2026-03-14T13:35:48.464Z",
+      "status": "awaiting_payment",
+      "item": {
+        "productId": 17981,
+        "slug": "set-meja-teras-sonokeling-solid-105x45-50x50cm-1-meja-2-kursi",
+        "title": "Set Meja Teras Sonokeling Solid 105×45-50x50cm 1 Meja 2 Kursi",
+        "priceValue": 12500000,
+        "priceFormatted": "Rp 12.500.000",
+        "featuredImage": "https://www.galleryfurnicraftjepara.com/wp-content/uploads/2025/04/Set-Meja-Teras-Sonokeling-Solid-105x45-50x50cm-3.5-Kursi-90x30x40cm-@1.4-02-scaled.jpg"
+      },
+      "quantity": 1,
+      "customer": {
+        "name": "test",
+        "phone": "+60123456789",
+        "email": "test@test.com",
+        "country": "Malaysia",
+        "state": "Johor",
+        "city": "Johor Bahru",
+        "postcode": "12345",
+        "address": "123fsdf"
+      },
+      "notes": "wr353r",
+      "payment": {
+        "type": "dp",
+        "dpPercentage": 50,
+        "fullAmount": 12500000,
+        "amountDueNow": 6250000,
+        "remainingAmount": 6250000,
+        "paymentMethod": "bank-transfer"
+      },
+      "adminNotes": "",
+      "courierName": "",
+      "trackingNumber": "",
+      "trackingUrl": "",
+      "shippedAt": null,
+      "paymentConfirmations": []
+    }
+  ]
+}

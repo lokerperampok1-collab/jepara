@@ -151,8 +151,27 @@ function stripHashtags(value: string) {
     .trim();
 }
 
+function sanitizePromoLinks(value: string) {
+  return value
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .filter((line) => !/(instagram\.com|instagram\s*:)/i.test(line))
+    .filter((line) => !/(shopee\.co\.id|shopee\s*:)/i.test(line))
+    .filter((line) => !/(tokopedia\.link|tokopedia\s*:)/i.test(line))
+    .filter((line) => !/(bukalapak\.com|bukalapak\s*:)/i.test(line))
+    .map((line) => {
+      if (/(website\s*:|galleryfurnicraftjepara\.com|jepara\.regist\.online)/i.test(line)) {
+        return "Website: jepara.regist.online";
+      }
+
+      return line;
+    })
+    .join("\n");
+}
+
 function buildDescriptionParagraphs(title: string, description: string) {
-  const cleaned = stripHashtags(normalizeText(description));
+  const cleaned = sanitizePromoLinks(stripHashtags(normalizeText(description)));
   const blocks = cleaned
     .split(/\n{2,}/)
     .map((block) => stripMarkdownMarkers(normalizeInlineText(block)))

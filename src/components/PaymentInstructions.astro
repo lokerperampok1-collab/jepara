@@ -1,0 +1,83 @@
+---
+import {
+  MANUAL_PAYMENT_CHANNELS,
+  ORDER_PAYMENT_WINDOW_HOURS,
+  type ManualPaymentMethod,
+} from "@/config/commerce";
+import { formatCurrency, formatDateIndo } from "@/utils/format";
+
+interface Props {
+  method: ManualPaymentMethod;
+  amount: number | null;
+  expiresAt: string;
+  remainingAmount?: number | null;
+}
+
+const { method, amount, expiresAt, remainingAmount = 0 } = Astro.props;
+const activeChannel = MANUAL_PAYMENT_CHANNELS.find((channel) => channel.id === method) ?? MANUAL_PAYMENT_CHANNELS[0];
+const hasBankDetails = Boolean(activeChannel?.bankName && activeChannel.accountNumber && activeChannel.accountName);
+const hasQris = Boolean(activeChannel?.qrisImagePath);
+---
+
+<section class="surface-card rounded-[2rem] p-6 sm:p-7">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--color-muted)]">Pembayaran</p>
+      <h2 class="serif-display mt-2 text-2xl font-semibold text-[color:var(--color-ink)]">
+        {activeChannel?.label ?? "Instruksi pembayaran"}
+      </h2>
+    </div>
+    <div class="rounded-[1.3rem] bg-[rgba(32,36,43,0.05)] px-4 py-3 text-right">
+      <p class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Bayar sekarang</p>
+      <p class="mt-1 text-lg font-semibold text-[color:var(--color-ink)]">{formatCurrency(amount)}</p>
+    </div>
+  </div>
+
+  <p class="mt-4 max-w-2xl text-sm leading-7 text-[color:var(--color-muted)]">
+    {activeChannel?.description ?? "Silakan lakukan pembayaran sesuai nominal pesanan."} Pembayaran awal disarankan
+    selesai dalam {ORDER_PAYMENT_WINDOW_HOURS} jam agar pesanan tidak tertunda.
+  </p>
+
+  {hasBankDetails && (
+    <dl class="mt-6 grid gap-4 sm:grid-cols-3">
+      <div class="rounded-[1.2rem] border border-[color:var(--color-border)] bg-white/80 p-4">
+        <dt class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Bank</dt>
+        <dd class="mt-2 text-sm font-semibold text-[color:var(--color-body)]">{activeChannel.bankName}</dd>
+      </div>
+      <div class="rounded-[1.2rem] border border-[color:var(--color-border)] bg-white/80 p-4">
+        <dt class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">No. Rekening</dt>
+        <dd class="mt-2 text-sm font-semibold text-[color:var(--color-body)]">{activeChannel.accountNumber}</dd>
+      </div>
+      <div class="rounded-[1.2rem] border border-[color:var(--color-border)] bg-white/80 p-4">
+        <dt class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Atas Nama</dt>
+        <dd class="mt-2 text-sm font-semibold text-[color:var(--color-body)]">{activeChannel.accountName}</dd>
+      </div>
+    </dl>
+  )}
+
+  {hasQris && (
+    <div class="mt-6 rounded-[1.5rem] border border-[color:var(--color-border)] bg-white/80 p-4 sm:max-w-sm">
+      <img src={activeChannel.qrisImagePath} alt="QRIS pembayaran Gallery Furnicraft Jepara" class="mx-auto rounded-[1rem]" />
+    </div>
+  )}
+
+  {!hasBankDetails && !hasQris && (
+    <div class="mt-6 rounded-[1.3rem] border border-dashed border-[color:var(--color-border)] bg-white/70 p-4 text-sm leading-7 text-[color:var(--color-muted)]">
+      Detail rekening atau QRIS belum diatur di server. Sementara itu, pesanan tetap tercatat dan admin bisa mengirim
+      instruksi pembayaran manual melalui kontak yang Anda isi saat checkout.
+    </div>
+  )}
+
+  <div class="mt-6 grid gap-4 sm:grid-cols-2">
+    <div class="rounded-[1.2rem] border border-[color:var(--color-border)] bg-white/70 p-4">
+      <p class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Batas konfirmasi</p>
+      <p class="mt-2 text-sm font-semibold text-[color:var(--color-body)]">{formatDateIndo(expiresAt)}</p>
+    </div>
+    {typeof remainingAmount === "number" && remainingAmount > 0 && (
+      <div class="rounded-[1.2rem] border border-[color:var(--color-border)] bg-white/70 p-4">
+        <p class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Sisa pelunasan</p>
+        <p class="mt-2 text-sm font-semibold text-[color:var(--color-body)]">{formatCurrency(remainingAmount)}</p>
+      </div>
+    )}
+  </div>
+</section>
