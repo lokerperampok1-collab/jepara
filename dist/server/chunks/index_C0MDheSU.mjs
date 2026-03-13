@@ -1,11 +1,11 @@
 import { c as createComponent } from './astro-component_bl35EZqZ.mjs';
 import 'piccolore';
 import { v as maybeRenderHead, a0 as addAttribute, J as renderTemplate } from './sequence_7oStfiHe.mjs';
-import { r as renderComponent } from './server_CSOThi1w.mjs';
+import { r as renderComponent } from './server_XwPFOWOU.mjs';
 import 'clsx';
-import { $ as $$ProductCard } from './ProductCard_5HTFJipV.mjs';
+import { $ as $$ProductCard } from './ProductCard_DGH3Uvq8.mjs';
 import { $ as $$SectionHeading } from './SectionHeading_DAZYkjk-.mjs';
-import { $ as $$BaseLayout, b as formatCount } from './BaseLayout_B8K3cQ30.mjs';
+import { $ as $$BaseLayout, b as formatCount } from './BaseLayout_Brr0uAoD.mjs';
 import { c as getHighlightedProducts, d as getNewestProducts, g as getAllCategories, S as SITE_DESCRIPTION, e as SITE_NAME, b as getAllProducts } from './catalog_BdPK18__.mjs';
 
 const $$InquiryButton = createComponent(($$result, $$props, $$slots) => {

@@ -10,17 +10,11 @@ const HIGH_VALUE_PRICE_THRESHOLD = 2e6;
 const MANUAL_PAYMENT_CHANNELS = [
   {
     id: "bank-transfer",
-    label: "Transfer Bank",
-    description: "Transfer ke rekening resmi Gallery Furnicraft Jepara sesuai nominal tagihan.",
+    label: "Transfer Bank BRI",
+    description: "Transfer ke rekening BRI sesuai nominal tagihan yang tertera di halaman pesanan.",
     accountName: "",
-    bankName: "",
+    bankName: "BRI",
     accountNumber: ""
-  },
-  {
-    id: "qris",
-    label: "QRIS",
-    description: "Bayar lewat QRIS dari mobile banking atau e-wallet setelah nominal pesanan dikonfirmasi.",
-    qrisImagePath: ""
   }
 ];
 
@@ -149,7 +143,7 @@ async function createOrderFromForm(formData) {
   }
   const quantity = Math.max(1, Math.round(normalizeNumber(formData.get("quantity"), 1)));
   const paymentType = normalizeText(formData.get("paymentType")) === "dp" ? "dp" : "full";
-  const paymentMethod = normalizeText(formData.get("paymentMethod")) === "qris" ? "qris" : "bank-transfer";
+  const paymentMethod = "bank-transfer";
   const payment = buildPaymentBreakdown(product, paymentType, paymentMethod, quantity);
   const customer = {
     name: normalizeText(formData.get("customerName")),

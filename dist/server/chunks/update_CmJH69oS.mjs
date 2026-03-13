@@ -1,22 +1,22 @@
-import { c as addPaymentConfirmation } from './orders_DAL7ycbv.mjs';
+import { u as updateOrderByAdmin } from './orders_Bqi7bjkL.mjs';
 
 const POST = async ({ request }) => {
   const formData = await request.formData();
   const orderCode = String(formData.get("orderCode") ?? "").trim();
   try {
-    const order = await addPaymentConfirmation(formData);
+    await updateOrderByAdmin(formData);
     return new Response(null, {
       status: 303,
       headers: {
-        Location: `/pesanan/${order.orderCode}/?success=${encodeURIComponent("Konfirmasi pembayaran berhasil dikirim.")}`
+        Location: `/admin/pesanan/${orderCode}/?success=${encodeURIComponent("Status pesanan berhasil diperbarui.")}`
       }
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Konfirmasi pembayaran gagal dikirim.";
+    const message = error instanceof Error ? error.message : "Pesanan gagal diperbarui.";
     return new Response(null, {
       status: 303,
       headers: {
-        Location: `/pesanan/${orderCode}/?error=${encodeURIComponent(message)}`
+        Location: `/admin/pesanan/${orderCode}/?error=${encodeURIComponent(message)}`
       }
     });
   }

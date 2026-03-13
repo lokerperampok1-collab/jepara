@@ -1,10 +1,10 @@
 import { c as createComponent } from './astro-component_bl35EZqZ.mjs';
 import 'piccolore';
 import { J as renderTemplate, v as maybeRenderHead, a0 as addAttribute } from './sequence_7oStfiHe.mjs';
-import { r as renderComponent } from './server_CSOThi1w.mjs';
-import { $ as $$OrderStatusPill } from './OrderStatusPill_b6KXDYKb.mjs';
-import { $ as $$BaseLayout, f as formatCurrency } from './BaseLayout_B8K3cQ30.mjs';
-import { g as getOrderByCode } from './orders_DAL7ycbv.mjs';
+import { r as renderComponent } from './server_XwPFOWOU.mjs';
+import { $ as $$OrderStatusPill } from './OrderStatusPill_DIsf8QXm.mjs';
+import { $ as $$BaseLayout, f as formatCurrency } from './BaseLayout_Brr0uAoD.mjs';
+import { g as getOrderByCode } from './orders_Bqi7bjkL.mjs';
 
 const prerender = false;
 const $$Index = createComponent(async ($$result, $$props, $$slots) => {

@@ -182,7 +182,7 @@ export async function createOrderFromForm(formData: FormData) {
 
   const quantity = Math.max(1, Math.round(normalizeNumber(formData.get("quantity"), 1)));
   const paymentType = normalizeText(formData.get("paymentType")) === "dp" ? "dp" : "full";
-  const paymentMethod = normalizeText(formData.get("paymentMethod")) === "qris" ? "qris" : "bank-transfer";
+  const paymentMethod: ManualPaymentMethod = "bank-transfer";
   const payment = buildPaymentBreakdown(product, paymentType, paymentMethod, quantity);
 
   const customer: OrderCustomer = {

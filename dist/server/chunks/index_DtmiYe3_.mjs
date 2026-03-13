@@ -1,8 +1,8 @@
 import { c as createComponent } from './astro-component_bl35EZqZ.mjs';
 import 'piccolore';
 import { J as renderTemplate, v as maybeRenderHead, a0 as addAttribute } from './sequence_7oStfiHe.mjs';
-import { r as renderComponent } from './server_CSOThi1w.mjs';
-import { $ as $$BaseLayout, b as formatCount } from './BaseLayout_B8K3cQ30.mjs';
+import { r as renderComponent } from './server_XwPFOWOU.mjs';
+import { $ as $$BaseLayout, b as formatCount } from './BaseLayout_Brr0uAoD.mjs';
 import { $ as $$SectionHeading } from './SectionHeading_DAZYkjk-.mjs';
 import { g as getAllCategories } from './catalog_BdPK18__.mjs';
 

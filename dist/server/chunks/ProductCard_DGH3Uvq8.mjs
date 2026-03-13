@@ -1,7 +1,7 @@
 import { c as createComponent } from './astro-component_bl35EZqZ.mjs';
 import 'piccolore';
 import { v as maybeRenderHead, a0 as addAttribute, J as renderTemplate } from './sequence_7oStfiHe.mjs';
-import { r as renderComponent } from './server_CSOThi1w.mjs';
+import { r as renderComponent } from './server_XwPFOWOU.mjs';
 import 'clsx';
 
 const $$ProductStatusBadge = createComponent(($$result, $$props, $$slots) => {

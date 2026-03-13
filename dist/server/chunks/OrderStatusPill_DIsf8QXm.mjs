@@ -2,7 +2,7 @@ import { c as createComponent } from './astro-component_bl35EZqZ.mjs';
 import 'piccolore';
 import { v as maybeRenderHead, a0 as addAttribute, J as renderTemplate } from './sequence_7oStfiHe.mjs';
 import 'clsx';
-import { a as getOrderStatusLabel } from './orders_DAL7ycbv.mjs';
+import { a as getOrderStatusLabel } from './orders_Bqi7bjkL.mjs';
 
 const $$OrderStatusPill = createComponent(async ($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$props, $$slots);

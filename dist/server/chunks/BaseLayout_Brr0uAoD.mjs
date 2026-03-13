@@ -1,7 +1,7 @@
 import { c as createComponent } from './astro-component_bl35EZqZ.mjs';
 import 'piccolore';
 import { v as maybeRenderHead, a0 as addAttribute, J as renderTemplate, aT as unescapeHTML, aU as renderHead, aV as renderSlot } from './sequence_7oStfiHe.mjs';
-import { r as renderComponent } from './server_CSOThi1w.mjs';
+import { r as renderComponent } from './server_XwPFOWOU.mjs';
 import 'clsx';
 import { f as SITE_TAGLINE, B as BRAND_TELEGRAM_HANDLE, e as SITE_NAME, g as getAllCategories, D as DEFAULT_SITE_URL, S as SITE_DESCRIPTION } from './catalog_BdPK18__.mjs';
 

@@ -1,8 +1,8 @@
 import { c as createComponent } from './astro-component_bl35EZqZ.mjs';
 import 'piccolore';
 import { J as renderTemplate, v as maybeRenderHead } from './sequence_7oStfiHe.mjs';
-import { r as renderComponent } from './server_CSOThi1w.mjs';
-import { $ as $$BaseLayout } from './BaseLayout_B8K3cQ30.mjs';
+import { r as renderComponent } from './server_XwPFOWOU.mjs';
+import { $ as $$BaseLayout } from './BaseLayout_Brr0uAoD.mjs';
 
 const $$404 = createComponent(($$result, $$props, $$slots) => {
   return renderTemplate`${renderComponent($$result, "BaseLayout", $$BaseLayout, { "title": "Halaman Tidak Ditemukan", "description": "Halaman yang Anda cari tidak tersedia di katalog Gallery Furnicraft Jepara." }, { "default": ($$result2) => renderTemplate` ${maybeRenderHead()}<section class="container-shell flex min-h-[60vh] items-center py-16"> <div class="surface-card w-full rounded-[2.4rem] px-8 py-12 text-center sm:px-12"> <p class="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-wood)]">404</p> <h1 class="serif-display mt-4 text-4xl font-semibold text-[color:var(--color-ink)]">Halaman tidak ditemukan</h1> <p class="mx-auto mt-5 max-w-2xl text-base leading-8 text-[color:var(--color-muted)]">

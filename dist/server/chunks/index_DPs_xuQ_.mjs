@@ -1,10 +1,10 @@
 import { c as createComponent } from './astro-component_bl35EZqZ.mjs';
 import 'piccolore';
 import { J as renderTemplate, aT as unescapeHTML, a0 as addAttribute, F as Fragment, v as maybeRenderHead } from './sequence_7oStfiHe.mjs';
-import { r as renderComponent } from './server_CSOThi1w.mjs';
+import { r as renderComponent } from './server_XwPFOWOU.mjs';
 import { $ as $$SectionHeading } from './SectionHeading_DAZYkjk-.mjs';
-import { $ as $$ProductCard } from './ProductCard_5HTFJipV.mjs';
-import { $ as $$BaseLayout } from './BaseLayout_B8K3cQ30.mjs';
+import { $ as $$ProductCard } from './ProductCard_DGH3Uvq8.mjs';
+import { $ as $$BaseLayout } from './BaseLayout_Brr0uAoD.mjs';
 import { p as paginateProducts, P as PRODUCTS_PER_PAGE, b as getAllProducts, g as getAllCategories } from './catalog_BdPK18__.mjs';
 
 var __freeze = Object.freeze;

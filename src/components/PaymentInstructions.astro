@@ -16,7 +16,6 @@ interface Props {
 const { method, amount, expiresAt, remainingAmount = 0 } = Astro.props;
 const activeChannel = MANUAL_PAYMENT_CHANNELS.find((channel) => channel.id === method) ?? MANUAL_PAYMENT_CHANNELS[0];
 const hasBankDetails = Boolean(activeChannel?.bankName && activeChannel.accountNumber && activeChannel.accountName);
-const hasQris = Boolean(activeChannel?.qrisImagePath);
 ---
 
 <section class="surface-card rounded-[2rem] p-6 sm:p-7">
@@ -55,16 +54,10 @@ const hasQris = Boolean(activeChannel?.qrisImagePath);
     </dl>
   )}
 
-  {hasQris && (
-    <div class="mt-6 rounded-[1.5rem] border border-[color:var(--color-border)] bg-white/80 p-4 sm:max-w-sm">
-      <img src={activeChannel.qrisImagePath} alt="QRIS pembayaran Gallery Furnicraft Jepara" class="mx-auto rounded-[1rem]" />
-    </div>
-  )}
-
-  {!hasBankDetails && !hasQris && (
+  {!hasBankDetails && (
     <div class="mt-6 rounded-[1.3rem] border border-dashed border-[color:var(--color-border)] bg-white/70 p-4 text-sm leading-7 text-[color:var(--color-muted)]">
-      Detail rekening atau QRIS belum diatur di server. Sementara itu, pesanan tetap tercatat dan admin bisa mengirim
-      instruksi pembayaran manual melalui kontak yang Anda isi saat checkout.
+      Detail rekening BRI akan ditampilkan di sini setelah diatur. Sementara itu, pesanan tetap tercatat dan admin
+      akan menghubungi Anda untuk mengirim instruksi transfer sesuai order.
     </div>
   )}
 

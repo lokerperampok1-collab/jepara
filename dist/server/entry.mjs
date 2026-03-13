@@ -1,4 +1,4 @@
-export { h as handler, o as options, b as startServer } from './chunks/server_CSOThi1w.mjs';
+export { h as handler, o as options, b as startServer } from './chunks/server_XwPFOWOU.mjs';
 import './chunks/sequence_7oStfiHe.mjs';
 import '@astrojs/internal-helpers/path';
 import '@astrojs/internal-helpers/remote';
