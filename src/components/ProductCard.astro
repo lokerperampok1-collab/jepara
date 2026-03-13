@@ -13,7 +13,7 @@ const imageAlt = product.featuredImage ? product.title : "Produk tanpa gambar";
 
 <article class="surface-card group overflow-hidden rounded-[1.75rem]">
   <a href={`/produk/${product.slug}/`} class="block">
-    <div class="aspect-[4/4.7] overflow-hidden bg-[rgba(127,79,42,0.08)]">
+    <div class="aspect-[4/4.7] overflow-hidden bg-[rgba(141,113,85,0.06)]">
       {product.featuredImage ? (
         <img
           src={product.featuredImage}
@@ -34,35 +34,34 @@ const imageAlt = product.featuredImage ? product.title : "Produk tanpa gambar";
     <div class="flex flex-wrap items-center gap-2">
       <ProductStatusBadge label={product.statusLabel} />
       {product.primaryCategoryLabel && (
-        <span class="rounded-full bg-[rgba(38,26,18,0.06)] px-3 py-1 text-xs font-medium text-[color:var(--color-body)]">
+        <span class="rounded-full bg-[rgba(32,36,43,0.05)] px-3 py-1 text-xs font-medium text-[color:var(--color-body)]">
           {product.primaryCategoryLabel}
         </span>
       )}
     </div>
 
     <div>
-      <h3 class="serif-display text-xl font-semibold leading-snug text-[color:var(--color-ink)]">
+      <h3 class="serif-display text-[1.35rem] font-semibold leading-snug text-[color:var(--color-ink)]">
         <a href={`/produk/${product.slug}/`} class="transition hover:text-[color:var(--color-wood)]">
           {product.title}
         </a>
       </h3>
-      {product.excerpt && <p class="line-clamp-3 mt-3 text-sm leading-6 text-[color:var(--color-muted)]">{product.excerpt}</p>}
+      {product.excerpt && <p class="line-clamp-2 mt-3 text-sm leading-6 text-[color:var(--color-muted)]">{product.excerpt}</p>}
     </div>
 
-    <div class="flex items-end justify-between gap-4">
+    <div class="flex items-end justify-between gap-4 border-t border-[color:var(--color-border)] pt-4">
       <div>
         <p class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Harga</p>
-        <p class="mt-1 text-lg font-semibold text-[color:var(--color-wood-deep)]">
+        <p class="mt-1 text-xl font-semibold text-[color:var(--color-wood-deep)]">
           {product.priceFormatted ?? "Hubungi kami"}
         </p>
       </div>
 
       <a
         href={`/produk/${product.slug}/`}
-        class="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--color-wood-deep)]"
+        class="inline-flex items-center justify-center rounded-full border border-[color:var(--color-border)] bg-white/80 px-4 py-2 text-sm font-semibold text-[color:var(--color-ink)] transition hover:border-[color:var(--color-wood-deep)] hover:text-[color:var(--color-wood-deep)]"
       >
-        Lihat Detail
-        <span aria-hidden="true">→</span>
+        Lihat produk
       </a>
     </div>
   </div>

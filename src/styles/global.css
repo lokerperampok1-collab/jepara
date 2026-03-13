@@ -1,20 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --color-ink: #261a12;
-  --color-body: #43352b;
-  --color-muted: #7d6c5f;
-  --color-border: rgba(73, 52, 36, 0.12);
-  --color-panel: rgba(255, 251, 244, 0.92);
-  --color-panel-strong: #fffaf1;
-  --color-wood: #7f4f2a;
-  --color-wood-deep: #55321b;
-  --color-sand: #f6efe3;
-  --color-moss: #5d6a4d;
-  --color-highlight: #e7c89b;
+  --color-ink: #20242b;
+  --color-body: #3e4752;
+  --color-muted: #707983;
+  --color-border: rgba(48, 56, 65, 0.12);
+  --color-panel: rgba(255, 255, 255, 0.92);
+  --color-panel-strong: #fbf8f2;
+  --color-wood: #8d7155;
+  --color-wood-deep: #2f4742;
+  --color-sand: #f5f0e8;
+  --color-moss: #5f7469;
+  --color-highlight: #d9cab7;
   --font-sans: "Trebuchet MS", "Segoe UI", "Helvetica Neue", sans-serif;
   --font-serif: "Palatino Linotype", "Book Antiqua", Georgia, serif;
-  --shadow-soft: 0 24px 60px rgba(68, 43, 21, 0.12);
+  --shadow-soft: 0 22px 55px rgba(33, 40, 46, 0.08);
 }
 
 html {
@@ -26,9 +26,9 @@ body {
   color: var(--color-body);
   font-family: var(--font-sans);
   background:
-    radial-gradient(circle at top left, rgba(231, 200, 155, 0.5), transparent 24rem),
-    radial-gradient(circle at top right, rgba(93, 106, 77, 0.12), transparent 22rem),
-    linear-gradient(180deg, #fffaf3 0%, #f8f1e5 48%, #fdf9f4 100%);
+    radial-gradient(circle at top left, rgba(217, 202, 183, 0.28), transparent 24rem),
+    radial-gradient(circle at top right, rgba(95, 116, 105, 0.1), transparent 20rem),
+    linear-gradient(180deg, #fffdf8 0%, #f7f3ec 52%, #fcfaf5 100%);
   min-height: 100vh;
 }
 
@@ -62,7 +62,7 @@ img {
   height: 18rem;
   left: -7rem;
   top: 10rem;
-  background: rgba(127, 79, 42, 0.12);
+  background: rgba(141, 113, 85, 0.08);
 }
 
 .page-shell::after {
@@ -70,7 +70,7 @@ img {
   height: 16rem;
   right: -6rem;
   top: 22rem;
-  background: rgba(93, 106, 77, 0.12);
+  background: rgba(95, 116, 105, 0.08);
 }
 
 .container-shell {
@@ -79,7 +79,7 @@ img {
 }
 
 .surface-card {
-  background: linear-gradient(180deg, rgba(255, 250, 241, 0.98), rgba(255, 255, 255, 0.88));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 247, 241, 0.92));
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-soft);
 }
@@ -108,4 +108,105 @@ img {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--color-wood-deep);
+  padding: 0.85rem 1.35rem;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+  box-shadow: 0 12px 24px rgba(47, 71, 66, 0.18);
+}
+
+.btn-primary:hover {
+  background: #36514b;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.82);
+  padding: 0.85rem 1.35rem;
+  color: var(--color-ink);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease;
+}
+
+.btn-secondary:hover {
+  border-color: rgba(47, 71, 66, 0.25);
+  background: rgba(255, 255, 255, 0.96);
+  transform: translateY(-1px);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.mobile-menu-open,
+.mobile-menu-open body {
+  overflow: hidden;
+}
+
+.mobile-sidebar-shell {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+}
+
+.mobile-sidebar-shell[data-open="true"] {
+  pointer-events: auto;
+}
+
+.mobile-sidebar-overlay {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(20, 24, 29, 0.38);
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.mobile-sidebar-shell[data-open="true"] .mobile-sidebar-overlay {
+  opacity: 1;
+}
+
+.mobile-sidebar-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  min-height: 100dvh;
+  width: min(22rem, calc(100vw - 2rem));
+  flex-direction: column;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 247, 241, 0.96));
+  border-left: 1px solid var(--color-border);
+  box-shadow: -20px 0 55px rgba(33, 40, 46, 0.12);
+  transform: translateX(100%);
+  transition: transform 220ms ease;
+}
+
+.mobile-sidebar-shell[data-open="true"] .mobile-sidebar-panel {
+  transform: translateX(0);
 }

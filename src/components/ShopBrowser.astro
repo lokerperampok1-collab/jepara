@@ -46,7 +46,7 @@ const visiblePages = buildPageWindow(initialMeta.totalPages, initialMeta.current
         <input
           name="q"
           type="search"
-          placeholder="Cari judul, kategori, atau keyword..."
+          placeholder="Cari model, nama produk, atau kategori..."
           class="w-full rounded-2xl border border-[color:var(--color-border)] bg-white px-4 py-3 text-sm outline-none transition focus:border-[color:var(--color-wood)]"
         />
       </label>
@@ -91,7 +91,7 @@ const visiblePages = buildPageWindow(initialMeta.totalPages, initialMeta.current
       Menampilkan {initialProducts.length} produk dari {initialMeta.totalItems} produk.
     </p>
     <p class="text-xs uppercase tracking-[0.22em] text-[color:var(--color-muted)]">
-      Pagination statis tetap tersedia untuk akses cepat dan SEO.
+      Pilih kategori atau urutkan sesuai kebutuhan ruang Anda.
     </p>
   </div>
 
@@ -195,9 +195,8 @@ const visiblePages = buildPageWindow(initialMeta.totalPages, initialMeta.current
                 <p class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Harga</p>
                 <p class="mt-1 text-lg font-semibold text-[color:var(--color-wood-deep)]">${item.priceFormatted ?? "Hubungi kami"}</p>
               </div>
-              <a href="${item.url}" class="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--color-wood-deep)]">
-                Lihat Detail
-                <span aria-hidden="true">→</span>
+              <a href="${item.url}" class="inline-flex items-center justify-center rounded-full border border-[color:var(--color-border)] bg-white/80 px-4 py-2 text-sm font-semibold text-[color:var(--color-ink)] transition hover:border-[color:var(--color-wood-deep)] hover:text-[color:var(--color-wood-deep)]">
+                Lihat produk
               </a>
             </div>
           </div>
@@ -347,8 +346,8 @@ const visiblePages = buildPageWindow(initialMeta.totalPages, initialMeta.current
       if (summary instanceof HTMLElement) {
         const activeCategory = categories.find((item) => item.slug === category)?.label;
         summary.textContent = activeCategory
-          ? `Menampilkan ${pageItems.length} produk dari ${totalItems} hasil untuk kategori ${activeCategory}.`
-          : `Menampilkan ${pageItems.length} produk dari ${totalItems} hasil pencarian katalog.`;
+          ? `Menampilkan ${pageItems.length} produk dari ${totalItems} pilihan untuk kategori ${activeCategory}.`
+          : `Menampilkan ${pageItems.length} produk dari ${totalItems} hasil pencarian.`;
       }
 
       if (staticPagination instanceof HTMLElement) {

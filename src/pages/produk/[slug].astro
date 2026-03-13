@@ -86,7 +86,7 @@ const structuredData = {
             {product.categoryItems.map((item) => (
               <a
                 href={`/kategori/${item.slug}/`}
-                class="rounded-full bg-[rgba(38,26,18,0.06)] px-3 py-1 text-xs font-medium text-[color:var(--color-body)]"
+                class="rounded-full bg-[rgba(32,36,43,0.05)] px-3 py-1 text-xs font-medium text-[color:var(--color-body)]"
               >
                 {item.label}
               </a>
@@ -105,27 +105,17 @@ const structuredData = {
 
           <dl class="mt-8 grid gap-4 sm:grid-cols-2">
             <div class="rounded-[1.4rem] border border-[color:var(--color-border)] bg-white/70 p-4">
-              <dt class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Tanggal terbit</dt>
+              <dt class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Dipublikasikan</dt>
               <dd class="mt-2 text-sm font-medium text-[color:var(--color-body)]">{formatDateIndo(product.date)}</dd>
             </div>
             <div class="rounded-[1.4rem] border border-[color:var(--color-border)] bg-white/70 p-4">
-              <dt class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Terakhir diperbarui</dt>
+              <dt class="text-xs uppercase tracking-[0.18em] text-[color:var(--color-muted)]">Pembaruan</dt>
               <dd class="mt-2 text-sm font-medium text-[color:var(--color-body)]">{formatDateIndo(product.modified)}</dd>
             </div>
           </dl>
 
           <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-            <InquiryButton href={product.telegramUrl} label="Tanya Produk Ini via Telegram" />
-            {product.sourceLink && (
-              <a
-                href={product.sourceLink}
-                target="_blank"
-                rel="noreferrer"
-                class="inline-flex items-center justify-center rounded-full border border-[color:var(--color-border)] bg-white/80 px-5 py-3 text-sm font-semibold text-[color:var(--color-wood-deep)] transition hover:border-[color:var(--color-wood)]"
-              >
-                Lihat Sumber Asli
-              </a>
-            )}
+            <InquiryButton href={product.telegramUrl} label="Tanya harga & detail" />
           </div>
         </div>
 
@@ -150,9 +140,9 @@ const structuredData = {
     <section class="container-shell">
       <div class="surface-card rounded-[2rem] p-7 sm:p-8">
         <SectionHeading
-          eyebrow="Deskripsi Produk"
-          title="Ringkasan detail dari data produk."
-          description="Hashtag promosi dihilangkan pada tampilan agar isi produk lebih mudah dibaca tanpa mengubah makna data."
+          eyebrow="Detail Produk"
+          title="Deskripsi dan informasi penting."
+          description="Gunakan informasi ini untuk menilai model, material, ukuran, dan kebutuhan finishing."
         />
 
         <div class="prose-copy mt-8 max-w-4xl text-base leading-8 text-[color:var(--color-body)]">
@@ -166,8 +156,8 @@ const structuredData = {
     <section class="container-shell mt-20 pb-8">
       <SectionHeading
         eyebrow="Produk Terkait"
-        title="Masih satu alur kategori dengan produk ini."
-        description="Rekomendasi diambil dari irisan `categories`, bukan dari data buatan tambahan."
+        title="Pilihan serupa yang bisa Anda lihat."
+        description="Cocok untuk membandingkan model, gaya, atau kategori yang berdekatan."
       />
 
       <div class="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">

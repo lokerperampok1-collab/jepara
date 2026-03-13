@@ -18,7 +18,7 @@ function isActive(href: string) {
 }
 ---
 
-<header class="sticky top-0 z-40 border-b border-[color:var(--color-border)] bg-[rgba(255,250,243,0.88)] backdrop-blur-xl">
+<header class="sticky top-0 z-40 border-b border-[color:var(--color-border)] bg-[rgba(255,253,248,0.9)] backdrop-blur-xl">
   <div class="container-shell flex items-center justify-between gap-4 py-4">
     <a href="/" class="min-w-0">
       <span class="block text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-muted)]">
@@ -29,7 +29,7 @@ function isActive(href: string) {
       </span>
     </a>
 
-    <nav class="hidden items-center gap-6 text-sm text-[color:var(--color-body)] md:flex">
+    <nav class="hidden items-center gap-7 text-sm text-[color:var(--color-body)] md:flex">
       {links.map((link) => (
         <a
           href={link.href}
@@ -43,13 +43,142 @@ function isActive(href: string) {
       ))}
     </nav>
 
+    <button
+      type="button"
+      class="mobile-menu-trigger inline-flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--color-border)] bg-white/80 text-[color:var(--color-ink)] transition hover:border-[color:var(--color-wood-deep)] hover:text-[color:var(--color-wood-deep)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-highlight)] md:hidden"
+      aria-expanded="false"
+      aria-controls="mobile-sidebar"
+      aria-label="Buka menu navigasi"
+      data-mobile-menu-open
+    >
+      <span class="sr-only">Buka menu</span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
+        <path d="M4 7h16"></path>
+        <path d="M4 12h16"></path>
+        <path d="M4 17h16"></path>
+      </svg>
+    </button>
+
     <a
       href={telegramUrl}
       target="_blank"
       rel="noreferrer"
-      class="inline-flex items-center justify-center rounded-full bg-[color:var(--color-wood-deep)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[color:var(--color-wood)]"
+      class="hidden md:inline-flex md:px-5 md:py-2.5 md:text-sm"
     >
-      Hubungi via Telegram
+      Konsultasi via Telegram
     </a>
   </div>
 </header>
+
+<div class="mobile-sidebar-shell md:hidden" data-mobile-sidebar>
+  <button
+    type="button"
+    class="mobile-sidebar-overlay"
+    aria-label="Tutup menu navigasi"
+    data-mobile-menu-close
+    tabindex="-1"
+  ></button>
+
+  <aside
+    id="mobile-sidebar"
+    class="mobile-sidebar-panel"
+    aria-hidden="true"
+    aria-label="Navigasi mobile"
+  >
+    <div class="flex items-start justify-between gap-4 border-b border-[color:var(--color-border)] px-5 py-5">
+      <div class="min-w-0">
+        <span class="block text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-muted)]">
+          Menu
+        </span>
+        <span class="serif-display mt-1 block text-lg font-semibold text-[color:var(--color-ink)]">
+          {SITE_NAME}
+        </span>
+      </div>
+
+      <button
+        type="button"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--color-border)] bg-white/80 text-[color:var(--color-ink)] transition hover:border-[color:var(--color-wood-deep)] hover:text-[color:var(--color-wood-deep)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-highlight)]"
+        aria-label="Tutup menu navigasi"
+        data-mobile-menu-close
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
+          <path d="M6 6l12 12"></path>
+          <path d="M18 6L6 18"></path>
+        </svg>
+      </button>
+    </div>
+
+    <nav class="flex flex-1 flex-col gap-2 px-5 py-6 text-base text-[color:var(--color-body)]">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          class:list={[
+            "rounded-2xl px-4 py-3 transition hover:bg-[rgba(47,71,66,0.07)] hover:text-[color:var(--color-wood-deep)]",
+            isActive(link.href) ? "bg-[rgba(47,71,66,0.08)] font-semibold text-[color:var(--color-wood-deep)]" : "",
+          ]}
+          data-mobile-nav-link
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="border-t border-[color:var(--color-border)] px-5 py-5">
+      <a
+        href={telegramUrl}
+        target="_blank"
+        rel="noreferrer"
+        class="btn-primary w-full"
+      >
+        Konsultasi via Telegram
+      </a>
+    </div>
+  </aside>
+</div>
+
+<script is:inline>
+  if (!window.__mobileSidebarBound) {
+    window.__mobileSidebarBound = true;
+
+    const root = document.documentElement;
+    const shell = document.querySelector("[data-mobile-sidebar]");
+    const panel = document.getElementById("mobile-sidebar");
+    const openButtons = document.querySelectorAll("[data-mobile-menu-open]");
+    const closeButtons = document.querySelectorAll("[data-mobile-menu-close]");
+    const navLinks = document.querySelectorAll("[data-mobile-nav-link]");
+
+    const setOpen = (isOpen) => {
+      if (!(shell instanceof HTMLElement) || !(panel instanceof HTMLElement)) {
+        return;
+      }
+
+      shell.dataset.open = isOpen ? "true" : "false";
+      panel.setAttribute("aria-hidden", isOpen ? "false" : "true");
+      root.classList.toggle("mobile-menu-open", isOpen);
+
+      openButtons.forEach((button) => {
+        if (button instanceof HTMLButtonElement) {
+          button.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        }
+      });
+    };
+
+    openButtons.forEach((button) => {
+      button.addEventListener("click", () => setOpen(true));
+    });
+
+    closeButtons.forEach((button) => {
+      button.addEventListener("click", () => setOpen(false));
+    });
+
+    navLinks.forEach((link) => {
+      link.addEventListener("click", () => setOpen(false));
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
+    });
+  }
+</script>
